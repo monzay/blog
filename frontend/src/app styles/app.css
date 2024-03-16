@@ -1,0 +1,630 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: white;
+}
+body{
+    background-color: black;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 13px;
+}
+
+.app{
+    width: 100%;
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+header{
+    width: 15%;
+    height: 100vh;
+}
+
+.header-icon-menu{
+  width: 30px;
+  height: 30px;
+  background-color: white;
+  position: absolute;
+  display: none;
+  left: 0;
+  
+}
+.header-menu-occiones{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.contenedor-occiones{
+    width: 90%;
+    border-radius: 5px;
+    height: 50px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    
+}
+.contenedor-occiones:hover{
+    transition: 0.5s;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+.occion{
+    font-size: 20px;
+}
+
+
+
+main{
+    width: 85%;
+    height: 100vh;
+    display: flex;
+}
+
+.seccion-tareas{
+    width: 80%;
+    height:100%;
+}
+
+
+.contedor-tareas{
+    width: 100%;
+    word-break: break-all;
+    margin-top: 10px;
+    display: flex;
+    margin: 0px 2px;
+
+  }
+  .culmna{
+    flex-grow: 1;
+    flex-basis: 0;
+    margin: 0px 5px;
+
+  }
+.tarea{
+    width: 100%; 
+    border-radius: 5px;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    display: flex;
+    margin-top: 10px;
+}
+.tarea-contendor{
+  width: 80%;
+  height: 100%;
+}
+.tarea-contendor-info{
+  display: flex;
+  flex-direction: column;
+}
+.tarea-tarea{
+  padding: 10px 0px;
+}
+
+
+
+.tarea-contenedor-btns{
+  display: none;
+  padding: 5px 0px;
+  opacity: 0;
+  transition: .2s ease-in-out;
+}
+.tarea:hover .tarea-contenedor-btns{
+  display: block;
+  opacity: 1;
+}
+.tarea-btn{
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+}
+.tarea-tiempo{
+  width: 20%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+}
+.seccion-usuarios-tops{
+    width: 20%;
+    height: 100vh;
+}
+.contenedor-usuarios-tops{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    justify-content: center;      
+}
+.usuarios-tops{
+    width:  90%;
+    height: 50px;display: flex;
+    align-items: center;
+    border-radius: 5px;
+    margin-top: 6px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* CodePen Card */
+
+.card {
+width: 100%;
+height: 10em;
+background: linear-gradient(270deg, #ce68d9, #45c6db, #45db79);
+background-size: 800% 800%;
+-webkit-animation: AnimationName 3s ease infinite;
+-moz-animation: AnimationName 3s ease infinite;
+animation: AnimationName 3s ease infinite;
+transition: .4s ease-in-out;
+border-radius: 7px;
+cursor: pointer;
+display: flex;
+align-items: center; 
+text-align: center;
+color: black;
+}
+
+.fl {
+display: flex;
+justify-content: flex-end;
+opacity: 0;
+transition: .2s ease-in-out;
+}
+
+.fl:hover .fullscreen {
+scale: 1.2;
+}
+
+.fl:hover .fullscreen_svg {
+fill: white;
+}
+
+.fullscreen {
+width: 1.5em;
+height: 1.5em;
+border-radius: 5px;
+background-color: #727890;
+margin: 1em;
+margin-right: 0.5em;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: .2s ease-in-out;
+box-shadow: 2px 2px 6px rgba(0,0,0,.4);
+}
+
+.fullscreen_svg {
+width: 15px;
+height: 15px;
+fill: rgb(177, 176, 176);
+transition: .2s ease-in-out;
+}
+
+
+.main:hover .card_back {
+margin-top: -5.9em;
+margin-left: 0em;
+scale: 1.1;
+height: 15.25em;
+cursor: pointer;
+}
+
+.main:hover .fl {
+opacity: 1;
+cursor: pointer;
+margin-right: 0.5em;
+}
+
+.data {
+display: flex;
+flex-direction: row;
+margin-top: 1em;
+}
+
+.img {
+width: 2.25em;
+height: 2.25em;
+background-color: #252525;
+border-radius: 5px;
+overflow: hidden;
+}
+
+.text {
+display: flex;
+justify-content: center;
+flex-direction: column;
+margin-left: 0.5em;
+font-family: Montserrat;
+color: white;
+}
+
+.text_m {
+font-weight: bold;
+font-size: 0.9em;
+}
+
+.text_s {
+font-size: 0.7em;
+}
+
+.btns {
+display: flex;
+gap: 0.5em;
+transition: .2s ease-in-out;
+}
+
+.likes {
+display: flex;
+align-items: center;
+justify-content: center;
+width: 2.5em;
+height: 1.4em;
+border-radius: 4px;
+margin-top: -0.5em;
+opacity: 0;
+background-color: #444857;
+transition: .2s ease-in-out;
+}
+
+.likes_text {
+font-family: Montserrat;
+font-size: 0.8em;
+margin-left: 0.25em;
+color: white;
+}
+
+.likes_svg {
+width: 12px;
+height: 12px;
+fill: white;
+}
+
+.likes:hover {
+background-color: #5A5F73;
+cursor: pointer;
+}
+
+.comments {
+display: flex;
+align-items: center;
+justify-content: center;
+width: 2.5em;
+height: 1.4em;
+border-radius: 4px;
+margin-top: -0.5em;
+opacity: 0;
+background-color: #444857;
+transition: .24s ease-in-out;
+}
+
+.comments_text {
+font-family: Montserrat;
+font-size: 0.8em;
+margin-left: 0.25em;
+color: white;
+}
+
+.comments_svg {
+width: 12px;
+height: 12px;
+fill: white;
+}
+
+.comments:hover {
+background-color: #5A5F73;
+cursor: pointer;
+}
+
+.views {
+display: flex;
+align-items: center;
+justify-content: center;
+width: 3em;
+height: 1.4em;
+border-radius: 4px;
+margin-top: -0.5em;
+opacity: 0;
+background-color: #444857;
+transition: .28s ease-in-out;
+}
+
+.views_text {
+font-family: Montserrat;
+font-size: 0.8em;
+margin-left: 0.25em;
+color: white;
+}
+
+.views_svg {
+width: 12px;
+height: 12px;
+fill: white;
+}
+
+.views:hover {
+background-color: #5A5F73;
+cursor: pointer;
+}
+
+.main:hover .likes {
+margin-top: 0.5em;
+opacity: 1;
+}
+
+.main:hover .comments {
+margin-top: 0.5em;
+opacity: 1;
+}
+
+.main:hover .views {
+margin-top: 0.5em;
+opacity: 1;
+}
+
+
+
+/* The Main Switch */
+
+.card_content {
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+
+
+
+
+
+
+
+
+.contenedor-btns-occiones{
+
+width: 200px;
+height: 40px;
+position: fixed;
+display: flex;
+background-color: rgba(255, 255, 255,0.1);
+backdrop-filter: blur(2px);
+border-radius: 10px;
+align-items: center;
+justify-content: space-evenly;
+left: 0;
+right: 0;
+bottom: 0;
+margin: auto;
+margin-bottom: 20px;
+display: none;
+}
+.btn-occiones{
+width: 50px;
+height: 30px;
+background-color: black;
+border-radius: 5px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+
+@keyframes AnimationName {
+0% {
+background-position: 0% 50%
+}
+
+50% {
+background-position: 100% 50%
+}
+
+100% {
+background-position: 0% 50%
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.contedor-tareas-tops{
+width: 100%;
+height: 100%;
+list-style: none;
+
+}
+.tareas-tops{
+width: 100%;
+background-color: rgba(255, 255, 255, 0.2);
+border-radius: 5px;
+margin-top: 5px;
+padding: 7px;
+}
+.informacion-tarea-top{
+display: flex;
+flex-direction: column;
+}
+.tarea-top-nombre{
+padding: 5px 0px;
+}
+
+
+
+/* model */
+.model-añadir-tarea{
+  width:  100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  margin-top: 10px;
+  border-radius: 5px;
+}
+.model-from-añadir-tarea{
+   display: flex;
+}
+.model-separador{
+  width: 80%;
+  
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.grupo-textarea{
+  width: 100%;
+  font-size: 14px;
+  background-color:  transparent;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  padding-top: 20px ;
+  
+
+}
+.grupo-textarea::-webkit-scrollbar {
+width: 0px;
+}
+.grupo-input{
+  width: 20%;
+  background: transparent;
+  border: none;
+  outline: none;
+  
+}
+.from-añadir-tarea-btn{
+  border: none;
+  width:40px;
+  border-radius: 5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+@media screen and (max-width: 480px) {
+.app{
+width: 100%;
+display: flex;
+justify-content: center;
+}
+.header-icon-menu{
+
+  display: block;
+  
+}
+header{
+display: none;
+}
+main{
+width: 100%;
+}
+.contedor-tareas{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+}
+.culmna{
+  width: 100%;
+
+}
+
+.seccion-usuarios-tops{
+display: none;
+}
+
+
+
+}
+.seccion-tareas{
+width: 100%;
+}
+
+@media screen and (max-width: 1000px) {
+header{
+width: 30%;
+}
+main{
+}
+.seccion-usuarios-tops{
+display: none;}
+}
+.contenedor-btns-occiones{
+display: flex;
+}
+
+.seccion-tareas{
+}
+
+
+
+
+
+
+
