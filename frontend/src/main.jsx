@@ -7,6 +7,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Verificar } from "./login singUp/Verificar";
 import { ProviderSIngUp } from "./Contextos/ProviderSIngUp";
 import { ProviderTareas } from "./Contextos/ProviderTareas";
+import { EstadoEliminarTarea } from "./Contextos/EstadoEliminarTarea";
+import { ProviderPasarIdTareaCompletada } from "./Contextos/ProviderPasarIdTareaCompletada";
+import { EstadosCrudNotas } from "./Contextos/EstadosCrudNotas";
 
 const router = createBrowserRouter([
   {
@@ -32,9 +35,15 @@ const router = createBrowserRouter([
       {
         path: "/app",
         element: (
-          <ProviderTareas>
-              <App />
-          </ProviderTareas>
+          <EstadosCrudNotas>
+            <ProviderPasarIdTareaCompletada>
+              <EstadoEliminarTarea>
+                <ProviderTareas>
+                  <App />
+                </ProviderTareas>
+              </EstadoEliminarTarea>
+            </ProviderPasarIdTareaCompletada>
+          </EstadosCrudNotas>
         ),
       },
     ],

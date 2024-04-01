@@ -1,37 +1,33 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { contextoTareas } from "../Contextos/ProviderTareas";
+import { obtenerCredencialesUse } from "../funciones globales/obtenenerDatosDelLocalStorage";
+import { contextoEstadoEliminarTarea } from "../Contextos/EstadoEliminarTarea";
 
-export const ComponenteActualizarTarea = ({id}) => {
+
+
+export const ComponenteActualizarTarea = ({id,setMostrarModelActualizar}) => {
 
   const {tareaUser} = useContext(contextoTareas)
-  
- 
-  
-
-
+  const {actualizoUnaTarea,setActualizoUnaTarea }= useContext(contextoEstadoEliminarTarea)
   //estados 
   const [newTarea, setNewTarea] = useState("");
   const [newTiempo, setNewTiempo] = useState("");
   const [alturaTextarea, setAlturaTextarea] = useState(0);
-
   // TODOS LOS useRef()
-  
   const elementDomTextarea = useRef(null);
 
-  async function actualizarTarea(tareaID) {
-    
+  const [textoTareaParaEditar,settextoTareaParaEditar] = useState("")
 
+
+  async function actualizarTarea(tareaID,e) {
+    e.preventDefault();
     const oldTarea = tareaUser.find((t) => t.tareaID === tareaID);
-    console.log(oldTarea)
-
-    // creamos la nueva tarea
     const nuevaTarea = {
       ...oldTarea,
+      idUser:  obtenerCredencialesUse( ).idUser,
       tarea: newTarea ? newTarea : oldTarea.tarea,
       tiempo: newTiempo ? newTiempo : oldTarea.tiempo,
     };
-    console.log(nuevaTarea)
-
     try {
       const response = await fetch("http://localhost:3000/app/actualizar", {
         method: "PUT",
@@ -40,9 +36,11 @@ export const ComponenteActualizarTarea = ({id}) => {
         },
         body: JSON.stringify(nuevaTarea),
       });
-      if(response.ok) console.log("se mando ",response)
+      if(response.ok){
+        setMostrarModelActualizar(false)
+        setActualizoUnaTarea(!actualizoUnaTarea)
+      }
       else console.error(error.message)
-
     } catch (error) {
       console.error("Error al obtener los datos:", error.message);
     }
@@ -62,18 +60,13 @@ export const ComponenteActualizarTarea = ({id}) => {
     };
   }, [alturaTextarea]);
 
-
-
-
+  
   return (
     <div className="model-añadir-tarea">
-      <form
-        className="model-from-añadir-tarea"
-        onSubmit={() => actualizarTarea(id) }
-      >
+      <form className="model-from-añadir-tarea"onSubmit={(e) => actualizarTarea(id,e) }>
         <div className="model-separador">
-
           <textarea
+          value=""
             style={alturaTextarea ? { height: `${alturaTextarea}px` } : null}
             ref={elementDomTextarea}
             className="grupo-textarea"
@@ -81,7 +74,6 @@ export const ComponenteActualizarTarea = ({id}) => {
             onChange={(e) => setNewTarea(e.target.value)}
           ></textarea>
           <button className="from-añadir-tarea-btn" type="submit">enviar </button>
-
         </div>
         <input
           className="grupo-input"

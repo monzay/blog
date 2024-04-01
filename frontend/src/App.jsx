@@ -1,193 +1,113 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useTransition } from "react";
 import "./app styles/app.css";
 import React from "react";
 import { Tarea } from "./web/Tarea";
 import { HederOccion } from "./web/HederOccion";
 import { OccionesPrincipales } from "./web/OccionesPrincipales";
 import { AñadirTarea } from "./web/AñadirTarea";
-import { ComponenteTareaTop } from "./web/ComponenteTareaTop";
 import { contextoTareas } from "./Contextos/ProviderTareas";
+import { ModelHoraDeLaTarea } from "./web/ModelHoraDeLaTarea";
+import { ComponenteTodaslasTareaTops } from "./web/ComponenteTodaslasTareaTops";
+import { obtenerCredencialesUse } from "./funciones globales/obtenenerDatosDelLocalStorage";
+import { contextoEstadoEliminarTarea } from "./Contextos/EstadoEliminarTarea";
+import { AñadirNota } from "./web/AñadirNota";
+import { calculateTaskDistribution } from "./funciones globales/distribuirTareasEnColumnas";
+import { Nota } from "./web/Nota";
+import { fondoDePantalla } from "./diseños de pago/FondoDePantalla";
 
-export function obtenerCredencialesUse() {
-  const credencialesLocalStore = JSON.parse(
-    localStorage.getItem("credenciales")
-  );
-  return credencialesLocalStore;
-}
+
 export const App = () => {
+  //contextos
+  const { tareaUser, setTareaUser } = useContext(contextoTareas);
+  const { eliminoUnaTareas,añadirTarea,actualizoUnaTarea } = useContext(contextoEstadoEliminarTarea);
 
-
- const {tareaUser,setTareaUser} = useContext(contextoTareas)
-
- 
+  // estados
+  const [envioElPunto, setEnvioElPunto] = useState(false);
   const [tareaTops, setTareaTops] = useState([]);
   const [distribucionTareas, setDistribucionTareas] = useState([]);
- 
-
-
-  // todos las funciones
-  function obetnerTareaLocales() {
-    const tareasLocales = JSON.parse(localStorage.getItem("tareas"));
-    return tareasLocales;
-  }
-
-  // function ObtenerTodosLosTiemposTareasEnArray(array) {
-  //   const todosLosTiempos = array.map((t) => {
-  //     const tiemposArrays = t.tiempo.split(":");
-  //     return tiemposArrays;
-  //   });
-  //   return todosLosTiempos;
-  // }
-
-  // function calcularTodosLosTiempos() {
-  //   setInterval(() => {
-  //     const date = new Date();
-  //     const horaActual = date.getHours();
-  //     const minutosActual = date.getMinutes();
-
-  //     let TiempoRestanteTareas = ObtenerTodosLosTiemposTareasEnArray(
-  //       tareaUser
-  //     ).map((tarea) => {
-  //       const horaTarea = tarea[0];
-  //       const minutoTarea = tarea[1];
-
-  //       // Calcular los minutos totales para la tarea y la hora actual
-  //       const minutosTarea = horaTarea * 60 + minutoTarea;
-  //       const minutosActuales = horaActual * 60 + minutosActual;
-
-  //       // Calcular los minutos restantes
-  //       let minutosFaltantes = minutosTarea - minutosActuales;
-  //       if (minutosFaltantes < 0) {
-  //         minutosFaltantes += 24 * 60; // Agrega 24 horas en minutos si la tarea ya pasó
-  //       }
-
-  //       // Calcular las horas y minutos restantes
-  //       const horasRestantes = Math.floor(minutosFaltantes / 60);
-  //       const minutosRestantes = minutosFaltantes % 60;
-
-  //       return [horasRestantes, minutosRestantes];
-  //     });
-
-  //     return TiempoRestanteTareas;
-  //   }, 600000);
-  // }
-
-  // todos useEffect
-
-  // actualizamos la hora de todas las tareas
-
-
-  useEffect(() => {
-    function calculateTaskDistribution(tarea) {
-      const taskDistribution = distributeTasks(tarea, 3, [[], [], []]);
-      return taskDistribution;
-
-      // const widthWindow = window.innerWidth;
-      // let taskDistribution = [];
-
-      // if (widthWindow > 1000) {
-      //   taskDistribution = distributeTasks(tasks, 3, [[], [], []]);
-      // }
-      // return taskDistribution;
-    }
-
-    function distributeTasks(tasks, columns, array) {
-      const distributedTasks = array;
-      for (let i = 0; i < tasks.length; i++) {
-        const columnIndex = i % columns;
-        distributedTasks[columnIndex].push(tasks[i]);
-      }
-      return distributedTasks;
-    }
-
-    const distributedTasks = calculateTaskDistribution(tareaUser);
-    setDistribucionTareas(distributedTasks);
-  }, [tareaUser]);
-
-  useEffect(() => {
-    const obtenerDatosUser = async () => {
-      try {
-        // si hay tareas locales  se saca las tareas locales
-        if (!obetnerTareaLocales()) {
-          setTareaUser(obetnerTareaLocales());
-        }
-        // si no hay tareas locales se hace la peticion
-        else {
-          // si o si se tiene que obtener las credenciales de localstarage
-          if (obtenerCredencialesUse()) {
-            const response = await fetch("http://localhost:3000/app", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ idUser: obtenerCredencialesUse().idUser }),
-            });
-            // si hay una respuesta se obtiene todas las tareas
-            if (response.ok) {
-              const { tareasTops, tareasID } = await response.json();
-              const todasLasTareas = tareasID;
-              todasLasTareas.push({ tarea: "añadir" });
-              setTareaUser(todasLasTareas);
-              setTareaTops(tareasTops);
-            }
-            // en caso contrario se devuelve un mensaje de error
-            else {
-              console.log("no se pudieron mandar los datos");
-            }
-          } else {
-            console.log("aun no estan las credenciales locales");
-          }
-        }
-      } catch (error) {
-        console.error("Error al obtener los datos:", error.message);
-      }
-    };
-    obtenerDatosUser();
-  }, []);
-
-
-
-
-
-
-
-
-
-
-
-
-
+  const [puntosTareas, setPuntosTareas] = useState([]);
+  const [arrayConTodasLasTareasQueYaPasaronSuTiempo,setArrayConTodasLasTareasQueYaPasaronSuTiempo] = useState([]);
+  const [todosLosIdsParaNoMostrar, setTodosLosIdsParaNoMostrar] = useState([]);
+  const [idsTareaNoPletadas, setIdsTareaNoPletadas] = useState([]);
+  const [mostrarTopOTareas, setMostrarTopOTareas] = useState({mostrasTareasTops: false,mostrarParaHacer: true,});
   
 
+  
+  
+  const [tiempoFondoDePantalla,setTiempoFondoDePantalla] = useState(fondoDePantalla())
+  //---------------------------------------------------------------------------------------------------//
+  useEffect(() => {
+    const dataLocal = JSON.parse(localStorage.getItem("IdTareasHechas"));
+    if (dataLocal) {
+      setTodosLosIdsParaNoMostrar(dataLocal[0].ids);
+    }
+  }, []);
 
-  //funciones que se tiene que probar ya que no se si funcinan no tengo internet
+  //---------------------------------------------------------------------------------------------------//
+  useEffect(() => {
+    function verSiLaTareaNoSeTieneQueMostrar() {
+      const arrayIdsNoMostrar = todosLosIdsParaNoMostrar;
+      const arrayIds = arrayConTodasLasTareasQueYaPasaronSuTiempo;
+      for (let i = 0; i < arrayIdsNoMostrar.length; i++) {
+        const bool = arrayIds.includes(arrayIdsNoMostrar[i]);
+        if (bool) {
+          const index = arrayIds.indexOf(arrayIdsNoMostrar[i]);
+          if (index !== -1) {
+            arrayIds.splice(index, 1);
+          }
+        }
+      }
+      return arrayIds;
+    }
+    setIdsTareaNoPletadas(verSiLaTareaNoSeTieneQueMostrar());
+  }, [arrayConTodasLasTareasQueYaPasaronSuTiempo, todosLosIdsParaNoMostrar]);
+  //---------------------------------------------------------------------------------------------------//
+  useEffect(() => {
+    const tareasUsuarioEnCulmnas = calculateTaskDistribution(tareaUser)
+    setDistribucionTareas(tareasUsuarioEnCulmnas);
+  }, [tareaUser]);
+  //---------------------------------------------------------------------------------------------------//
 
-  const [seguimientoTarea, setSeguimientoTarea] = useState({
-    noHecha: 0,
-    hecha: 0,
-  });
+  // falta agregar la dependencia dea actualizar
+  useEffect(() => {
+    async function s() {
+      const { tareasTops, tareas, puntosTareas } =
+        await obtenerTareasUserYTareasTops();
+      setTareaUser(tareas);
+      setPuntosTareas(puntosTareas);
+      setTareaTops(tareasTops);
+    }
+    s();
+  }, [eliminoUnaTareas,envioElPunto,añadirTarea,actualizoUnaTarea]);
 
-  async function mandarDarPuntoDeLaTareaCompletada() {
+  async function obtenerTareasUserYTareasTops() {
     try {
-      const datoDeLaTarea = {
-        idUser: obtenerIdUser().idUser,
-        tareaID: 12,
-        hecha: seguimientoTarea.hecha,
-        noHecha: seguimientoTarea.noHecha,
-      };
-
-      const response = await fetch("http://localhost:3000/", {
+      const response = await fetch("http://localhost:3000/app", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(datoDeLaTarea),
+        body: JSON.stringify({ idUser: obtenerCredencialesUse().idUser }),
       });
-
+      // si hay una respuesta se obtiene todas las tareas
       if (response.ok) {
-      } else {
+        const tareas = await response.json();
+        const todasLasTareas = tareas.tareasID;
+        todasLasTareas.push({ tarea: "añadir" });
+        localStorage.setItem("tareas", JSON.stringify(todasLasTareas));
+        return {
+          tareas: todasLasTareas,
+          tareasTops: tareas.tareasTops,
+          puntosTareas: tareas.puntosTareas,
+        };
+      }
+      // en caso contrario se devuelve un mensaje de error
+      else {
         console.log("no se pudieron mandar los datos");
       }
     } catch (error) {
       console.error("Error al obtener los datos:", error.message);
     }
   }
+  //---------------------------------------------------------------------------------------------------//
   return (
     <div className="app">
       <div className="header-icon-menu"></div>
@@ -206,11 +126,27 @@ export const App = () => {
             {[0, 1, 2].map((culumna) => (
               <div key={culumna} className="culmna">
                 {distribucionTareas[culumna]
-                  ? distribucionTareas[culumna].map((tarea,index) => {
-                      if (tarea.tarea === "añadir") {
-                        return <AñadirTarea />;
-                      } else {
-                        return <Tarea index={index} tarea={tarea}  />;
+                  ? distribucionTareas[culumna].map((tarea) => {
+                      if (tarea.tarea === "añadir") return <AñadirTarea />;
+                      else if (tarea.tarea === "añadir nota")
+                        return <AñadirNota />;
+                      else if (tarea.tipo == "nota")
+                        return <Nota nota={tarea} />;
+                      else {
+                        return (
+                          <Tarea
+                            setTiempoFondoDePantalla={setTiempoFondoDePantalla}
+                            puntosTareas={puntosTareas}
+                            tarea={tarea}
+                            setArrayConTodasLasTareasQueYaPasaronSuTiempo={
+                              setArrayConTodasLasTareasQueYaPasaronSuTiempo
+                            }
+                            arrayConTodasLasTareasQueYaPasaronSuTiempo={
+                              arrayConTodasLasTareasQueYaPasaronSuTiempo
+                            }
+                            todosLosIdsParaNoMostrar={todosLosIdsParaNoMostrar}
+                          />
+                        );
                       }
                     })
                   : null}
@@ -219,33 +155,56 @@ export const App = () => {
           </div>
         </section>
         <section className="seccion-usuarios-tops">
-          <ComponenteTareaTop />
-          <ul className="contedor-tareas-tops">
-            <li className="tareas-tops">
-              <div>
-                <div className="informacion-tarea-top">
-                  <span className="tarea-top-nombre">joel</span>
-                  <span className="tarea-top-mensaje">
-                    hola gente como se llaman
-                  </span>
-                  <span className="tarea-top-puntos">puntos:</span>
-                </div>
-              </div>
-            </li>
-            <li className="tareas-tops">
-              <div>
-                <div className="informacion-tarea-top">
-                  <span className="tarea-top-nombre">joel</span>
-                  <span className="tarea-top-mensaje">
-                    hola gente como se llaman
-                  </span>
-                  <span className="tarea-top-puntos">puntos:</span>
-                </div>
-              </div>
-            </li>
-          </ul>
+          <div className="contendor-mostrar-tareaTop-y-tareas">
+            {mostrarTopOTareas.mostrasTareasTops && (
+              <ComponenteTodaslasTareaTops tareaTops={tareaTops} />
+            )}
+            {mostrarTopOTareas.mostrarParaHacer && (
+              <ul>
+                {idsTareaNoPletadas &&
+                  idsTareaNoPletadas.map((data) => (
+                    <ModelHoraDeLaTarea
+                      data={data}
+                      setEnvioElPunto={setEnvioElPunto}
+                      envioElPunto={envioElPunto}
+                      setTodosLosIdsParaNoMostrar={setTodosLosIdsParaNoMostrar}
+                      todosLosIdsParaNoMostrar={todosLosIdsParaNoMostrar}
+                    />
+                  ))}
+              </ul>
+            )}
+          </div>
+          <div className="contenedor-seccion-mostrar-hora-de-hacer-la-tarea ">
+            <div
+              onClick={() => {
+                setMostrarTopOTareas({
+                  mostrasTareasTops: true,
+                  mostrarParaHacer: false,
+                });
+              }}
+              className="btn-seccion-mostrar-hora-de-hacer-la-tarea"
+            >
+              <span>top</span>
+            </div>
+            <div
+              onClick={() => {
+                setMostrarTopOTareas({
+                  mostrasTareasTops: false,
+                  mostrarParaHacer: true,
+                });
+              }}
+              className="btn-seccion-mostrar-hora-de-hacer-la-tarea"
+            >
+              <span>tareas</span>
+            </div>
+          </div>
         </section>
-        <OccionesPrincipales />
+        <div className="fondo-de-pantalla">
+         <div className="fonodo-tiempo">
+        {tiempoFondoDePantalla}
+         </div>
+        </div>
+        <OccionesPrincipales setDistribucionTareas={setDistribucionTareas} />
       </main>
     </div>
   );
