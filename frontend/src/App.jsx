@@ -125,7 +125,6 @@ export const App = () => {
   useEffect(() => {
     async function s() {
       const { tareasTops, tareas, puntosTareas } = await obtenerTareasUserYTareasTops();
-      console.log(tareasTops)
       setTareaUser(tareas);
       setPuntosTareas(puntosTareas);
       setTareaTops(tareasTops);

@@ -66,7 +66,6 @@ export const ComponenteActualizarTarea = ({id,setMostrarModelActualizar}) => {
       <form className="model-from-añadir-tarea"onSubmit={(e) => actualizarTarea(id,e) }>
         <div className="model-separador">
           <textarea
-         
             style={alturaTextarea ? { height: `${alturaTextarea}px` } : null}
             ref={elementDomTextarea}
             className="grupo-textarea"

@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { contextoEstadosCrudNotas } from "../Contextos/EstadosCrudNotas";
-
+import iconsEliminar from "../../public/Icons/eliminar.svg"
+import iconsEditar from "../../public/Icons/editar.svg"
 const style = {
   width: "100%",
   background: "rgba(255,255,255,0.1)",
@@ -62,12 +63,13 @@ export const Nota = ({ nota }) => {
           <button>enviar</button>
         </form>
       )}
-      <div className="contenedor-btn-nota">
-        <div onClick={eliminarNota} className="btn-nota"></div>
-        <div
-          onClick={() => setMostrarModelActualizarNota(true)}
-          className="btn-nota"
-        ></div>
+      <div style={{display:"flex"}} className="contenedor-btn-nota">
+        <div   onClick={eliminarNota} className="btn-nota">
+          <img  className="icons-nota" src={iconsEliminar} alt="" />
+        </div>
+        <div onClick={() => setMostrarModelActualizarNota(true)}className="btn-nota" >
+          <img  className="icons-nota" src={iconsEditar} alt="" />
+        </div>
       </div>
     </div>
   );

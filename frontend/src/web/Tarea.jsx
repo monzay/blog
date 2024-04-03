@@ -172,11 +172,10 @@ export const Tarea = ({
           </div>
           <div className="contenedor-tiempo-tarea">
             <div style={{ width: "100%" }} className="tarea-tiempo">
-              {tiempoRestante}{" "}
+              {tiempoRestante}
             </div>
             <div style={{ width: "100%" }} className="tarea-tiempo">
-              {" "}
-              {tarea.tiempo}{" "}
+              {tarea.tiempo}
             </div>
         
           </div>
