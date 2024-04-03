@@ -51,8 +51,6 @@ export const Tarea = ({
     }
   }
   //------------------------------------------------------------------------//
-
-  
   function verSiLaTareaLlegoASuHoraDeDestino() {
 
     function verSiElTiempoLlego() {
@@ -72,7 +70,6 @@ export const Tarea = ({
       );
     }
   }
-
   // se va a ejecutar una sola vez  para que se muestren todas  las tarea que se tienen que hacer
   // hasta que se ejecuta la misma funcion pero cada 1min 
   useEffect(() => {
@@ -109,6 +106,17 @@ export const Tarea = ({
   }
   //------------------------------------------------------------------------//
 
+  function eliminarTodosLosIdsAlmacenadosCuandonSeaOtroDia(){
+    const date = new Date()
+    const dia = date.getDate()
+    
+   const dataLocal = JSON.parse( localStorage.getItem("IdTareasHechas"))
+   if(dataLocal[0].dia  !== dia){
+    localStorage.removeItem("IdTareasHechas")
+    // mesansaje : cuando se elimine el almacenamiento se va tener que resfrescar para que se vuelva a crear el almacenamiento por que si no donde se van mandar los ids
+  }
+  }
+
   // futura useEffet para que todas las cosas relacionadas con el tiempo para solo tener un solo pucle y que todo dependa de uno
   useEffect(() => {
       //----------------------------------------------------------------------//
@@ -124,6 +132,11 @@ export const Tarea = ({
       // fondo 
       const tiempoEnTiempoReal = fondoDePantalla()
       setTiempoFondoDePantalla(tiempoEnTiempoReal);
+
+
+      // FD : CUANDO DIA CAMBIE Y NO SE EL MISMO DIA SE VA A ELIMINAR EL ALAMACENAMIENTO 
+      eliminarTodosLosIdsAlmacenadosCuandonSeaOtroDia()
+      
     }, 60000);
 
     return () => clearInterval(interval);

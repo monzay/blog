@@ -8,10 +8,10 @@ const obtenerFecha = () => {
   return `${año}-${mes}-${diaDelMes}`
 };
 
+
 export const tareas = (req, res) => {
 
   const { idUser, tarea, tiempo } = req.body;
-  console.log(req.body)
   
   if (tarea) {
     db.run("INSERT INTO detalles_tarea (id_user,tarea,tiempo,fecha) VALUES (?,?,?,?)",

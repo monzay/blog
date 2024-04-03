@@ -20,8 +20,29 @@ export const cargarInformacion = async (req, res) => {
           }
         }
       );
+    }); 
+
+    const puntosTareas  = await new Promise((resolve, reject) => {
+      db.all(
+        `
+        SELECT dt.tareaID, sum(tarea_hecha) as tareaHecha, sum(tarea_no_hecha) tareaNoHecha 
+        FROM sesiones AS s
+        INNER JOIN detalles_tarea AS dt ON dt.id_user = s.id_user
+        INNER JOIN seguimiento_tareas AS st ON st.tareaID = dt.tareaID
+        WHERE dt.id_user = ?
+        GROUP BY tarea `,
+        [idUser],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(rows);
+          }
+        }
+      );
     });
-    // resolver esta mal
+    
+    
     const tareasTops = await new Promise((resolve, reject) => {
       db.all(
         `SELECT nombre,dt.tarea,sum(st.tarea_hecha) as puntos_user FROM sesiones as s
@@ -41,7 +62,7 @@ export const cargarInformacion = async (req, res) => {
       );
     });
 
-    res.status(200).json({tareasTops,tareasID });
+    res.status(200).json({tareasTops,tareasID,puntosTareas});
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error en el servidor." });

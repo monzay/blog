@@ -31,23 +31,45 @@ export const App = () => {
   const [idsTareaNoPletadas, setIdsTareaNoPletadas] = useState([]);
   const [mostrarTopOTareas, setMostrarTopOTareas] = useState({mostrasTareasTops: false,mostrarParaHacer: true,});
   
-
-  
   
   const [tiempoFondoDePantalla,setTiempoFondoDePantalla] = useState(fondoDePantalla())
+
+
+
   //---------------------------------------------------------------------------------------------------//
+  
+  // EFFECT  PARA CREAR UN ESPACION EN EL LOCALSTORAGE (IdTareasHechas)
   useEffect(() => {
-    const dataLocal = JSON.parse(localStorage.getItem("IdTareasHechas"));
-    if (dataLocal) {
-      setTodosLosIdsParaNoMostrar(dataLocal[0].ids);
+    function crearEspacioEnLocalStorageIdTareasHechas(){
+      const date = new Date()
+      const dia = date.getDay()
+      const exite  = JSON.parse( localStorage.getItem("IdTareasHechas"))
+      if(!exite ) localStorage.setItem("IdTareasHechas",JSON.stringify([{ids:[],dia}]))
     }
+    crearEspacioEnLocalStorageIdTareasHechas()
+  }, [])
+ //---------------------------------------------------------------------------------------------------//
+  
+  // EFFECT  PARA OBTENER TODOS LOS IDS ALMACENADOS DURANTE EL DIA  PARA NO MOSTRAR 
+  useEffect(() => {
+    function obtenerLosIdTareaQueYaFueronCompletadaDuranteDia(){
+      const dataLocal = JSON.parse(localStorage.getItem("IdTareasHechas"));
+      if (dataLocal) {
+        setTodosLosIdsParaNoMostrar(dataLocal[0].ids);
+      }
+    }
+    obtenerLosIdTareaQueYaFueronCompletadaDuranteDia()
   }, []);
 
   //---------------------------------------------------------------------------------------------------//
+  // EFECTO  ?
   useEffect(() => {
+    // FUNCION  PARA NO MOSTRAR LA TAREA QUE YA FUE COMPLETADA 
+
     function verSiLaTareaNoSeTieneQueMostrar() {
       const arrayIdsNoMostrar = todosLosIdsParaNoMostrar;
       const arrayIds = arrayConTodasLasTareasQueYaPasaronSuTiempo;
+
       for (let i = 0; i < arrayIdsNoMostrar.length; i++) {
         const bool = arrayIds.includes(arrayIdsNoMostrar[i]);
         if (bool) {
@@ -57,29 +79,20 @@ export const App = () => {
           }
         }
       }
+
       return arrayIds;
     }
+
     setIdsTareaNoPletadas(verSiLaTareaNoSeTieneQueMostrar());
   }, [arrayConTodasLasTareasQueYaPasaronSuTiempo, todosLosIdsParaNoMostrar]);
+
   //---------------------------------------------------------------------------------------------------//
   useEffect(() => {
     const tareasUsuarioEnCulmnas = calculateTaskDistribution(tareaUser)
     setDistribucionTareas(tareasUsuarioEnCulmnas);
   }, [tareaUser]);
-  //---------------------------------------------------------------------------------------------------//
-
-  // falta agregar la dependencia dea actualizar
-  useEffect(() => {
-    async function s() {
-      const { tareasTops, tareas, puntosTareas } =
-        await obtenerTareasUserYTareasTops();
-      setTareaUser(tareas);
-      setPuntosTareas(puntosTareas);
-      setTareaTops(tareasTops);
-    }
-    s();
-  }, [eliminoUnaTareas,envioElPunto,añadirTarea,actualizoUnaTarea]);
-
+  //---------------------------------------------------------------------------------------------------//Ç
+  // OBETNEMOS TODAS LAS TAREAS DEL SERVIDOR , HISTORIAL , TAREA TOPS 
   async function obtenerTareasUserYTareasTops() {
     try {
       const response = await fetch("http://localhost:3000/app", {
@@ -107,6 +120,20 @@ export const App = () => {
       console.error("Error al obtener los datos:", error.message);
     }
   }
+   //---------------------------------------------------------------------------------------------------//
+  // EFFECT QUE TIENE EL CONTROL DE TODOS LOS CAMBIO DE LAS TAREAS QUE SE ESTAN LLAMANDO DE LA API 
+  useEffect(() => {
+    async function s() {
+      const { tareasTops, tareas, puntosTareas } = await obtenerTareasUserYTareasTops();
+      console.log(tareasTops)
+      setTareaUser(tareas);
+      setPuntosTareas(puntosTareas);
+      setTareaTops(tareasTops);
+    }
+    s();
+  }, [eliminoUnaTareas,envioElPunto,añadirTarea,actualizoUnaTarea]);
+
+
   //---------------------------------------------------------------------------------------------------//
   return (
     <div className="app">

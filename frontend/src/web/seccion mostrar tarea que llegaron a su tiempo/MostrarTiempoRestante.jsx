@@ -1,9 +1,15 @@
 import React from 'react'
 
 export const MostrarTiempoRestante = ({tiempoRestante}) => {
+
+
+  const horaFormateada = tiempoRestante.horas 
+  const minutosFormateados = tiempoRestante.minutos < 10 ? `0${tiempoRestante.minutos}` : tiempoRestante.minutos;
   return (
     <div className="contenedor-tiempo-corriendo">
-     <span>{tiempoRestante[0].horas } </span>: <span>{tiempoRestante[0].minutos >= 10 ? tiempoRestante[0].minutos : ` 0${tiempoRestante[0].minutos}`} </span>
+      <span>
+         {`${horaFormateada}:${minutosFormateados} `}
+      </span>
     </div>
   )
 }

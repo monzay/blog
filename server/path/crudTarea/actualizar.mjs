@@ -6,8 +6,9 @@ export const actualizar = (req, res) => {
         tiempo,
         idUser,
         tareaID} = req.body;
+
+        console.log(req.body)
         
-    if(idUser && typeof idUser === "number" && tareaID && typeof tareaID === "number" ){
         
         // consulta sqlite3 para actualizar los datos 
         db.run(`UPDATE detalles_tarea AS dt
@@ -23,7 +24,6 @@ export const actualizar = (req, res) => {
             }
         }
         )
-    }
 
 
 };
