@@ -9,7 +9,7 @@ export const TareasSecundarias = ({tareaTops,nunTarea}) => {
             {tareaTops[nunTarea] ? tareaTops[nunTarea].nombre : "nombre"}{" "}
           </div>
           <div class="text_s">
-            {tareaTops[nunTarea] ? tareaTops[nunTarea].tarea : "nombre"}{" "}
+            {tareaTops[nunTarea] ? tareaTops[nunTarea].tarea : "mensaje"}{" "}
           </div>
         </div>
       </div>

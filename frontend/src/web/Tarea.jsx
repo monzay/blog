@@ -135,7 +135,7 @@ export const Tarea = ({
       // FD : CUANDO DIA CAMBIE Y NO SE EL MISMO DIA SE VA A ELIMINAR EL ALAMACENAMIENTO 
       eliminarTodosLosIdsAlmacenadosCuandonSeaOtroDia()
       
-    }, 60000);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [tarea.tiempo]);
@@ -166,7 +166,8 @@ export const Tarea = ({
               </button>
             </div>
           </div>
-          <div className="contenedor-tiempo-tarea">
+  <div className="conts">
+  <div className="contenedor-tiempo-tarea">
             <div style={{ width: "100%" }} className="tarea-tiempo">
               {tiempoRestante}
             </div>
@@ -175,6 +176,7 @@ export const Tarea = ({
             </div>
         
           </div>
+  </div>
         </>
       )}
     </div>

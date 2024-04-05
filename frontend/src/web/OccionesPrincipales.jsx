@@ -9,8 +9,6 @@ export const OccionesPrincipales = ({setDistribucionTareas}) => {
 
   
   const {dependenciasCrudNotas} = useContext(contextoEstadosCrudNotas)
-
-
   const [dependenciaMostrarNota,setDependenciaMostrarNota] = useState(false)
   const [dependenciaMostrarTarea,setDependenciaMostrarTarea] = useState(false)
 

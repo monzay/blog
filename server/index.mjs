@@ -21,8 +21,14 @@ function rutaDBsqlite (){
 const __dirname = path.dirname(__filename)
 const rutaDateBase = path.join(__dirname,"database","tareas.db")
 return rutaDateBase
-  return
 }
+
+function eliminarCadaSemanaLosPuntosTareas (){
+ const date =  new Date()
+ console.log(date)
+}
+
+eliminarCadaSemanaLosPuntosTareas()
 
 const sqlite3 = sqlite.verbose() 
 export const db =  new sqlite3.Database(rutaDBsqlite())
@@ -51,6 +57,9 @@ app.put("/app/actualizar",actualizar)
 //seguimiento para todas las tareas del usuario si fue hecha o no 
 
 app.post("/app/seguimiento",seguimientoTarea)
+
+
+
 
 app.listen(3000, () => {
     console.log(`pueto 3000`);

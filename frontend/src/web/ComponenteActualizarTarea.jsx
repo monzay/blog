@@ -16,8 +16,6 @@ export const ComponenteActualizarTarea = ({id,setMostrarModelActualizar}) => {
   // TODOS LOS useRef()
   const elementDomTextarea = useRef(null);
 
-  const [textoTareaParaEditar,settextoTareaParaEditar] = useState("")
-
 
   async function actualizarTarea(tareaID,e) {
     e.preventDefault();

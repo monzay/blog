@@ -50,6 +50,7 @@ export const ModelHoraDeLaTarea = ({
     }
   }, []);
 
+
   //------------------------------------------------------------------------//
   // FUNCION  QUE GUARDA EL TIEMPO QUE TRANSCURRIO Y LO GUARDA  AL SALIR DE LA PAGINA O REFRESCAR
   function guardarTiempoCuadoElUsuarioCierreLaPagina() {
@@ -58,28 +59,23 @@ export const ModelHoraDeLaTarea = ({
       localStorage.setItem("tiempoRestanTarea", JSON.stringify(ultimaHora));
     });
   }
-  guardarTiempoCuadoElUsuarioCierreLaPagina()
-  
   //------------------------------------------------------------------------//
   // FUNCION PARA MANDAR LOS DATOS A LA BASE DE DATOS 
   async function mandarDarPuntoDeLaTareaCompletada() {
     try {
+      const idLocal = JSON.parse(localStorage.getItem("tiempoRestanTarea"))
       const datoDeLaTarea = {
-        tareaID: dataTarea.tareaID,
+        tareaID: dataTarea.tareaID ? dataTarea.tareaID  :idLocal,
         tareaHecha: 1,
         tareaNoHecha: 0,
       };
-
       const response = await fetch("http://localhost:3000/app/seguimiento", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(datoDeLaTarea),
       });
       const data = await response.json();
-      if (response.ok) {
-        console.log(data);
         setEnvioElPunto(!envioElPunto);
-      }
     } catch (error) {
       console.error("Error al obtener los datos:", error.message);
     }
@@ -105,37 +101,29 @@ export const ModelHoraDeLaTarea = ({
   }
 
   
-  
   function restarTiempo (horasRestantes,minutosRentes){
     const interval = setInterval(() => {
       if (minutosRentes !== 0) {
         minutosRentes -= 1;
-        setTiempoRestante((prev) => ({
-          ...prev,
-          horas: horasRestantes,
-          minutos: minutosRentes,
-        }));
+        setTiempoRestante((prev) => ({...prev, horas: horasRestantes,minutos: minutosRentes}));
       } else {
         if (horasRestantes !== 0) {
           horasRestantes -= 1;
           minutosRentes = 59;
-          setTiempoRestante((prev) => ({
-            ...prev,
-            horas: horasRestantes,
-            minutos: minutosRentes,
-          }));
+          setTiempoRestante((prev) => ({...prev,horas: horasRestantes,minutos: minutosRentes,}));
         } else {
           clearInterval(interval);
           mandarDarPuntoDeLaTareaCompletada();
           mandarIdParaNoMastrarLasTareasCompletadas();
         }
       }
-    }, 60000);
+    }, 100);
   }
+
   function calcularTiempoQueElUsuarioDeclaro() {
     const [horas, minutos] = tiempo.split(":");
-    let horasRestantes = horas;
-    let minutosRentes = minutos;
+    let horasRestantes = tiempo.indexOf(":") === -1 ? 0 : horas ;
+    let minutosRentes = tiempo.indexOf(":") ? tiempo : minutos;
     setTiempoRestante({
       horas,
       minutos,
@@ -173,8 +161,6 @@ export const ModelHoraDeLaTarea = ({
   function clickEjecucion(e) {
     e.preventDefault();
     const {horas,minutos}  = JSON.parse(localStorage.getItem("tiempoRestanTarea"))
-    const timepoElegido = tiempo.split(":")
-
     // VALIDACION PARA QUE SE PA QUE ESTA PASANDO EL USUARIO 
     
     if(horas !== 0  && minutos !== 0 ){
@@ -183,14 +169,6 @@ export const ModelHoraDeLaTarea = ({
     }
     else if (!tiempo) {
       setError("dale pelotudo pone el tiempo")
-      return 
-    }
-    else if (!timepoElegido.length === 2){
-      setError("dale pelotudo pensas que soy tonto")
-      return 
-    }
-    else if (isNaN(timepoElegido[0]) || isNaN(timepoElegido[1])) {
-      setError("pero pone un numero cabeza de pingo")
       return 
     }
     else {
@@ -252,8 +230,6 @@ export const ModelHoraDeLaTarea = ({
   }, []);
 
 
-
-
   function mandarIdParaNoMastrarLasTareasCompletadas() {
     const dataLocal = JSON.parse(localStorage.getItem("IdTareasHechas"));
     const id = data;
@@ -267,7 +243,6 @@ export const ModelHoraDeLaTarea = ({
     
     localStorage.setItem("IdTareasHechas", JSON.stringify([newData]));
   }
-
 
 
   return (
