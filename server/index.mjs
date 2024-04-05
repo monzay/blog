@@ -9,9 +9,25 @@ import { tareas } from "./path/crudTarea/añadir.mjs";
 import { seguimientoTarea } from "./path/seguimientoTarea.mjs";
 import { eliminar } from "./path/crudTarea/eliminar.mjs";
 import { actualizar } from "./path/crudTarea/actualizar.mjs";
-const sqlite3 = sqlite.verbose() 
 
-export const db =  new sqlite3.Database("C:/Users/FRANCISCO/Desktop/blog/blog-de-notas/server/database/tareas.db")
+
+import url from "url"
+import path from "path";
+
+
+
+function rutaDBsqlite (){
+  const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename)
+const rutaDateBase = path.join(__dirname,"database","tareas.db")
+return rutaDateBase
+  return
+}
+
+const sqlite3 = sqlite.verbose() 
+export const db =  new sqlite3.Database(rutaDBsqlite())
+
+
 
 
 const app = express()

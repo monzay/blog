@@ -1,23 +1,43 @@
-import {useState } from "react";
+import { useState } from "react";
 import React from "react";
-
-
+import "../app styles/fromSingUp.css";
+import {Link} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 export const SingUp = () => {
-  // estados del formulario
+
+  const  redirigirApp = useNavigate()
+
+  useEffect(() => {
+     const credenciales = JSON.parse( localStorage.getItem("credenciales"))
+     if(credenciales){
+      if(credenciales.token) return redirigirApp("/app")
+     }
+  }, [])
+
+
+
+
+
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  //errores que tira el servidor
   const [error, setError] = useState("");
 
-  // todas la  funciones  
+ const navegate = useNavigate();
+//--------------------------------------------------------------//
+  // VALIDACIONES 
+
+
   const validarEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
   };
+  
   const fromSingUp = async (e) => {
     e.preventDefault();
+
     try {
       // Validación de campos vacíos
       if (!nombre || !email || !password) {
@@ -29,18 +49,16 @@ export const SingUp = () => {
         setError("Por favor, introduce un correo electrónico válido.");
         return;
       }
-      // Validación de longitud mínima de contraseña
-      else if (password.length < 8) {
-        setError("La contraseña debe tener al menos 8 caracteres.");
-        return;
-      } else {
-  
-        
+    else {
+
+      
         const credencialesUser = {
           nombre,
           email,
           password,
         };
+
+        
         const response = await fetch("http://localhost:3000/singUp", {
           method: "POST",
           headers: {
@@ -48,51 +66,60 @@ export const SingUp = () => {
           },
           body: JSON.stringify(credencialesUser),
         });
-        if (!response.ok) console.log("erro al resivir los datos");
-        else {
-          const data = await response.json();
-            setError(data.mensaje);
-        }
+        const data = await response.json();
+          setError(data.mensaje)
+          navegate("/login")
       }
     } catch (error) {
       console.log(error.message);
     }
   };
-  
 
   return (
-    <div>
-      <h1>singUp</h1>
-      <form onSubmit={fromSingUp}>
-        <div>
-          <label htmlFor="nombre">nombre</label>
+    <div className="contenedor-from">
+      <form class="form" onSubmit={fromSingUp}>
+        <p class="login">Resgistrarse</p>
+        <div class="inputContainer">
           <input
-            type="text"
-            id="nombre"
-            value={nombre}
             onChange={(e) => setNombre(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="email">email</label>
-          <input
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          ></input>
-        </div>
-        <div>
-          <label htmlFor="password">password</label>
-          <input
+            placeholder="nombre"
             type="text"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            class="fInput email"
           />
         </div>
-        <button type="submit">enviar</button>
+
+        <div class="inputContainer">
+          <input
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="email"
+            type="text"
+            class="fInput email"
+          />
+        </div>
+
+        <div class="inputContainer">
+          <button  class="submit" > enviar
+          </button>
+          <input
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="contraseña"
+            type="text"
+            class="fInput email"
+          />
+          <input
+            placeholder="Enter your password"
+            type="text"
+            class="fInput pass"
+          />
+        </div>
+        <div class="con">
+          <p>ya tenes una cuenta?&nbsp;</p>
+          <Link to="/login">Iniciar sesion</Link>
+        </div>
       </form>
+      <div className="contenedor-mensaje-de-error">
       <span>{error} </span>
+      </div>
     </div>
   );
 };

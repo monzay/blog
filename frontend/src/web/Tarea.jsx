@@ -75,8 +75,6 @@ export const Tarea = ({
   useEffect(() => {
     verSiLaTareaLlegoASuHoraDeDestino()
   }, [])
-  
-
   //------------------------------------------------------------------------//
   function calcularCuantoTiempoRestanteLeQueda(hora) {
     if (hora) {
@@ -145,8 +143,6 @@ export const Tarea = ({
 
 
 
-
-
   return (
     <div className="tarea" key={tarea.tareaID}>
       {tarea.tareaID === tareaId && mostrarModelActualizar ? <ComponenteActualizarTarea  id={tareaId}  setMostrarModelActualizar={setMostrarModelActualizar}/>
@@ -156,7 +152,7 @@ export const Tarea = ({
             <div className="tarea-contendor-info">
               <span className="tarea-tarea">{tarea.tarea}</span>
               <div className="contendor-datos-tareas">
-                <span> dias:{VincularLosPuntos()? VincularLosPuntos().tareaHecha + VincularLosPuntos().tareaNoHecha : 0} </span>
+                <span > dias:{VincularLosPuntos()? VincularLosPuntos().tareaHecha + VincularLosPuntos().tareaNoHecha : 0} </span>
                 <span>TH:{VincularLosPuntos() ? VincularLosPuntos().tareaHecha : 0} </span>
                 <span>TNH: {VincularLosPuntos() ? VincularLosPuntos().tareaNoHecha : 0} </span>
               </div>

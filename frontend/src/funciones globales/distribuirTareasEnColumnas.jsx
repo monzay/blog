@@ -4,10 +4,12 @@
       }
   
       function distributeTasks(tasks, columns, array) {
-        const distributedTasks = array;
-        for (let i = 0; i < tasks.length; i++) {
-          const columnIndex = i % columns;
-          distributedTasks[columnIndex].push(tasks[i]);
+        if(tasks){
+          const distributedTasks = array;
+          for (let i = 0; i < tasks.length; i++) {
+            const columnIndex = i % columns;
+            distributedTasks[columnIndex].push(tasks[i]);
+          }
+          return distributedTasks;
         }
-        return distributedTasks;
       }

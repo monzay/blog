@@ -5,14 +5,13 @@ export const ComponenteTareaTop = ({tareaTops}) => {
   return (
     <div className="main">
     <div className="card">
-    {tareaTops[0] && tareaTops[0].tarea}
+    {tareaTops[0] ? tareaTops[0].tarea : "mensaje"}
       <div className="card_content"></div>
       <div className="card_back"></div>
     </div>
     <div className="data">
-      <div className="img"></div>
       <div className="text">
-        <div className="text_m"> {tareaTops[0] && tareaTops[0].nombre} </div>
+        <div className="text_m"> {tareaTops[0]  ? tareaTops[0].nombre :  "nombre"} </div>
         <div className="text_s">234</div>
       </div>
     </div>

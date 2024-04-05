@@ -78,8 +78,8 @@ export const AñadirTarea = () => {
   return (
     <div className="model-añadir-tarea">
     {
-      !mostrarFormAñadir && (  <div style={{width:"100%",padding:"40px 0px",display:"flex",justifyContent:"center"}} onClick={() => setMostrarFromAñadir(true)}>
-      <img style={{height:"50px"}} src={iconAñadir} alt="" />
+      !mostrarFormAñadir && (  <div style={{width:"100%",padding:"35px 0px",display:"flex",justifyContent:"center"}} onClick={() => setMostrarFromAñadir(true)}>
+      <img style={{height:"50px",  filter: "invert(100%) saturate(0)"}} src={iconAñadir} alt="" />
     </div>)
     }
       {mostrarFormAñadir && (

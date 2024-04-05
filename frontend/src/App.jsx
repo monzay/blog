@@ -14,6 +14,7 @@ import { AñadirNota } from "./web/AñadirNota";
 import { calculateTaskDistribution } from "./funciones globales/distribuirTareasEnColumnas";
 import { Nota } from "./web/Nota";
 import { fondoDePantalla } from "./diseños de pago/FondoDePantalla";
+import { useFetcher, useNavigate } from "react-router-dom";
 
 
 export const App = () => {
@@ -34,6 +35,12 @@ export const App = () => {
   
   const [tiempoFondoDePantalla,setTiempoFondoDePantalla] = useState(fondoDePantalla())
 
+
+  
+
+
+
+  
 
 
   //---------------------------------------------------------------------------------------------------//
@@ -140,9 +147,9 @@ export const App = () => {
       <header>
         <section className="header-seccion-menu">
           <div className="header-menu-occiones">
-            <HederOccion occion="premion" />
-            <HederOccion occion="ajustes" />
+            <HederOccion occion="perfil" />
             <HederOccion occion="pago" />
+            <HederOccion occion="ajustes" />
           </div>
         </section>
       </header>

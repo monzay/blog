@@ -4,18 +4,21 @@ export const sing_up = (req, res) => {
   console.log(req.body);
 
   if (nombre == "") {
-    return res.status(400).json({
-      error: "El campo nombre es obligatorio y no puede estar vacío.",
+
+   res.status(400).json({
+      mensaje: "El campo nombre es obligatorio y no puede estar vacío.",
     });
+    return
   } else if (email == "") {
-    return res.status(400).json({
-      error: "El campo 'email' debe ser un correo electrónico válido.",
+    res.status(400).json({
+      mensaje: "El campo 'email' debe ser un correo electrónico válido.",
     });
+    return 
   } else if (password == "") {
-    return res
-      .status(400)
-      .json({ error: "El campo 'password' debe tener al menos 6 caracteres." });
+     res.status(400).json({ mensaje: "El campo 'password' debe tener al menos 6 caracteres." });
+      return 
   }
+
   if (
     nombre &&
     typeof nombre === "string" &&
@@ -24,6 +27,7 @@ export const sing_up = (req, res) => {
     password &&
     typeof password === "string"
   ) {
+    
     db.serialize(() => {
       // Verificar si el usuario ya existe
       db.get(
@@ -49,7 +53,7 @@ export const sing_up = (req, res) => {
             console.log("[-] error: " + err);
             return res
               .status(500)
-              .json({ mensaje: "Error interno del servidor" });
+              .json({mensaje: "Error interno del servidor" });
           } else {
             return res.status(200).json({ mensaje: "se registro con exito" });
           }
