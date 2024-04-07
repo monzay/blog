@@ -13,6 +13,7 @@ import { actualizar } from "./path/crudTarea/actualizar.mjs";
 
 import url from "url"
 import path from "path";
+import { clear, Console } from "console";
 
 
 
@@ -23,18 +24,34 @@ const rutaDateBase = path.join(__dirname,"database","tareas.db")
 return rutaDateBase
 }
 
-function eliminarCadaSemanaLosPuntosTareas (){
- const date =  new Date()
- console.log(date)
+function eliminarCadaSemanaLosPuntosTareas(db) {
+  const date = new Date();
+  const dia = date.getDay(); 
+  const horas = date.getHours(); 
+  const minutos = date.getMinutes()
+
+  let tiempoHastaProximoLunes = 0;
+  if (dia === 0) tiempoHastaProximoLunes = 7 * 24 * 60 * 60 * 1000; 
+  else tiempoHastaProximoLunes = (8 - dia) * 24 * 60 * 60 * 1000 - horas * 60 * 60 * 1000 - minutos * 60 * 1000;
+  
+  setTimeout(() => {
+    db.run("DELETE FROM seguimiento_tareas", (err) => {
+      if(err)console.log(err)
+      else console.log("se elimino ")
+    });
+    
+    setInterval(() => {
+      db.run("DELETE FROM seguimiento_tareas", (err) => console.log(err));
+    }, 7 * 24 * 60 * 60 * 1000); 
+  }, tiempoHastaProximoLunes); 
 }
 
-eliminarCadaSemanaLosPuntosTareas()
+
 
 const sqlite3 = sqlite.verbose() 
 export const db =  new sqlite3.Database(rutaDBsqlite())
 
-
-
+eliminarCadaSemanaLosPuntosTareas(db) 
 
 const app = express()
 
@@ -57,6 +74,9 @@ app.put("/app/actualizar",actualizar)
 //seguimiento para todas las tareas del usuario si fue hecha o no 
 
 app.post("/app/seguimiento",seguimientoTarea)
+
+
+
 
 
 
