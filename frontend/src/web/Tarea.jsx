@@ -13,6 +13,7 @@ export const Tarea = ({
   setTiempoFondoDePantalla,
 }) => {
   // [tarea]: nos retorna todas las tareas
+  
 
   const { eliminoUnaTareas, setEliminoUnaTarea } = useContext(contextoEstadoEliminarTarea);
   const [tareaId, setTareaId] = useState(0);
@@ -33,7 +34,6 @@ export const Tarea = ({
         idUser: obtenerCredencialesUse().idUser,
         tareaID: tareaID,
       };
-      console.log(tareaUser);
       // peticion al servidor para que elimine la tarea
       const response = await fetch("http://localhost:3000/app/eliminar", {
         method: "POST",
@@ -43,7 +43,6 @@ export const Tarea = ({
       if (!response.ok) console.log("erro al resivir los datos");
       else {
         const data = await response.json();
-        console.log("respuesta del servidor: ", data);
         setEliminoUnaTarea(!eliminoUnaTareas);
       }
     } catch (error) {
@@ -72,6 +71,7 @@ export const Tarea = ({
   }
   // se va a ejecutar una sola vez  para que se muestren todas  las tarea que se tienen que hacer
   // hasta que se ejecuta la misma funcion pero cada 1min 
+
   useEffect(() => {
     verSiLaTareaLlegoASuHoraDeDestino()
   }, [])
@@ -106,11 +106,15 @@ export const Tarea = ({
 
   function eliminarTodosLosIdsAlmacenadosCuandonSeaOtroDia(){
     const date = new Date()
-    const dia = date.getDate()
+    const dia = date.getDay()
     
    const dataLocal = JSON.parse( localStorage.getItem("IdTareasHechas"))
-   if(dataLocal[0].dia  !== dia){
-    localStorage.removeItem("IdTareasHechas")
+   
+   if(dataLocal){
+    if(dataLocal[0].dia  !== dia){
+      console.log("hola como estas")
+      localStorage.removeItem("IdTareasHechas")
+   }
     // mesansaje : cuando se elimine el almacenamiento se va tener que resfrescar para que se vuelva a crear el almacenamiento por que si no donde se van mandar los ids
   }
   }

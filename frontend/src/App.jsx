@@ -32,13 +32,7 @@ export const App = () => {
   const [idsTareaNoPletadas, setIdsTareaNoPletadas] = useState([]);
   const [mostrarTopOTareas, setMostrarTopOTareas] = useState({mostrasTareasTops: false,mostrarParaHacer: true,});
   
-  
   const [tiempoFondoDePantalla,setTiempoFondoDePantalla] = useState(fondoDePantalla())
-
-
-  
-
-
 
   
 

@@ -5,6 +5,7 @@ import { contextoTareas } from "../Contextos/ProviderTareas";
 import { contextoPasarIdTareaCompletada } from "../Contextos/ProviderPasarIdTareaCompletada";
 import { MostrarTiempoRestante } from "./seccion mostrar tarea que llegaron a su tiempo/MostrarTiempoRestante";
 import { FormElegirTiempo } from "./seccion mostrar tarea que llegaron a su tiempo/FormElegirTiempo";
+import { contextoEstadoEliminarTarea } from "../Contextos/EstadoEliminarTarea";
 export const ModelHoraDeLaTarea = ({
   data,
   setEnvioElPunto,
@@ -23,25 +24,21 @@ export const ModelHoraDeLaTarea = ({
   const { tareaUser } = useContext(contextoTareas);
   const { setIdTareaHecha } = useContext(contextoPasarIdTareaCompletada);
   const [dataTarea, setDataTarea] = useState({});
-
   const [mostrarElegirTiempo, setMostrarElegirTiempo] = useState(false);
-  const [tiempoRestante, setTiempoRestante] = useState({
-    horas: 0,
-    minutos: 0,
-    id: 0,
-    horaEnLaQueComenzo: "",
-  });
+  const [tiempoRestante, setTiempoRestante] = useState({horas: 0,minutos: 0,id: 0,horaEnLaQueComenzo: "",});
   const [id, setId] = useState(0);
-  const [tiempo, setTiempo] = useState("");
-  useState(false);
-
-
+  const [tiempo, setTiempo] = useState("")
   const [error,setError] =  useState("")
+
+
+
+  const [indentificador,setIndentificador ]= useState({tiempoDeclado:false,retomarTiempo:false })
+
 
   //------------------------------------------------------------------------//
   // EFFECT QUE VE SI LOS EL REPO SE CREO  Y SINO LO CREA 
   useEffect(() => {
-    const tiempoLocal = JSON.parse(localStorage.getItem("tiempoRestanTarea"));
+    const tiempoLocal =localStorage.getItem("tiempoRestanTarea")
     if (!tiempoLocal) {
       localStorage.setItem(
         "tiempoRestanTarea",
@@ -54,42 +51,69 @@ export const ModelHoraDeLaTarea = ({
   //------------------------------------------------------------------------//
   // FUNCION  QUE GUARDA EL TIEMPO QUE TRANSCURRIO Y LO GUARDA  AL SALIR DE LA PAGINA O REFRESCAR
   function guardarTiempoCuadoElUsuarioCierreLaPagina() {
-    window.addEventListener("beforeunload", function (event) {
+    window.addEventListener("beforeunload", function (e) {
       const ultimaHora = tiempoRestante;
       localStorage.setItem("tiempoRestanTarea", JSON.stringify(ultimaHora));
     });
   }
+  guardarTiempoCuadoElUsuarioCierreLaPagina()
+    //------------------------------------------------------------------------//
+  // SIRVE LA ENTRELAZAR LOS DATOS 
+
+
+
+
+
+  useEffect(() => {
+    const tarea = tareaUser.find((tarea) => tarea.tareaID === data);
+    setDataTarea(tarea);
+  }, []);
   //------------------------------------------------------------------------//
+
+
+
+  //SUB FUNCION 
   // FUNCION PARA MANDAR LOS DATOS A LA BASE DE DATOS 
   async function mandarDarPuntoDeLaTareaCompletada() {
+    
     try {
       const idLocal = JSON.parse(localStorage.getItem("tiempoRestanTarea"))
+      
+      // revisar 
       const datoDeLaTarea = {
-        tareaID: dataTarea.tareaID ? dataTarea.tareaID  :idLocal,
+        tareaID: dataTarea.tareaID ? dataTarea.tareaID  : idLocal.id ,
         tareaHecha: 1,
         tareaNoHecha: 0,
       };
+      
       const response = await fetch("http://localhost:3000/app/seguimiento", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(datoDeLaTarea),
       });
       const data = await response.json();
+      if(response.ok) console.log(data)
         setEnvioElPunto(!envioElPunto);
     } catch (error) {
       console.error("Error al obtener los datos:", error.message);
     }
   }
-  //------------------------------------------------------------------------//
-  // SIRVE LA ENTRELAZAR LOS DATOS 
-  useEffect(() => {
-    const tarea = tareaUser.find((tarea) => tarea.tareaID === data);
-    setDataTarea(tarea);
-  }, [data]);
+  // SUB FUNCION 
+  function mandarIdParaNoMastrarLasTareasCompletadas() {
+    const dataLocal = JSON.parse(localStorage.getItem("IdTareasHechas"));
+    const  x =  JSON.parse(localStorage.getItem("tiempoRestanTarea"));
 
-  //------------------------------------------------------------------------//
+    const id = indentificador.tiempoDeclado ? data : x.id 
 
-  // TODAS ESTA FUNCION SIRVER 
+    setTodosLosIdsParaNoMostrar((prev) => [...prev, id]);
+    const newData = {
+      ...dataLocal[0],
+      ids:[...dataLocal[0].ids,id],
+    };
+    
+    localStorage.setItem("IdTareasHechas", JSON.stringify([newData]));
+  }
+  // SUB FUNCION
   function timepoActual() {
     const date = new Date();
     const horas = date.getHours();
@@ -99,8 +123,7 @@ export const ModelHoraDeLaTarea = ({
     const stringTiempo = `${stringHoras}:${stringMinutos}`;
     return stringTiempo;
   }
-
-  
+  // SUB FUNCION
   function restarTiempo (horasRestantes,minutosRentes){
     const interval = setInterval(() => {
       if (minutosRentes !== 0) {
@@ -117,48 +140,47 @@ export const ModelHoraDeLaTarea = ({
           mandarIdParaNoMastrarLasTareasCompletadas();
         }
       }
-    }, 100);
+    }, 1000);
   }
-
+  // FRUNCION DECLARACION DEL TIEMPO 
   function calcularTiempoQueElUsuarioDeclaro() {
-    const [horas, minutos] = tiempo.split(":");
-    let horasRestantes = tiempo.indexOf(":") === -1 ? 0 : horas ;
-    let minutosRentes = tiempo.indexOf(":") ? tiempo : minutos;
+    setIndentificador({tiempoDeclado:true,retomarTiempo:false})
+  
+    let horasRestantes = tiempo.indexOf(":") === -1 ? 0 : tiempo.split(":")[0] ;
+    let minutosRentes = tiempo.indexOf(":") === -1 ?  tiempo : tiempo.split(":")[1]
+
+
     setTiempoRestante({
-      horas,
-      minutos,
+      horas:horasRestantes,
+      minutos:minutosRentes,
       id: data,
       horaEnLaQueComenzo: timepoActual(),
     });
+
     restarTiempo(horasRestantes,minutosRentes)
   }
+ 
+   //------------------------------------------------------------------------//
 
-  
+  // FUNCION QUE CALCULAR EL TIMEPO QUE PASO PARA HACER UNA RESTA CON EL TIEMPO LOCAL   Y RETOMAR  Y SEGUIR CORRIENDO 
   function retomamosElTiempo() {
+    setIndentificador({tiempoDeclado:false,retomarTiempo:true})
     const tiempo = JSON.parse(localStorage.getItem("tiempoRestanTarea"));
-    
-    setId(tiempo.id);
-    setTiempoRestante(tiempo);
-    // vemos si timepo exite
-    if (tiempo) {
-      const horaNumber = parseInt(tiempo.horas);
-      const minutosNumber = parseInt(tiempo.minutos);
-
-      // vemos si no modificaron los datos de forma externa
-      if (horaNumber || minutosNumber) {
-        let horaRetantes = horaNumber;
-        let minutosRentes = minutosNumber;
-        restarTiempo(horaRetantes,minutosRentes)
-      }
+    if(tiempo.horas !== 0 || tiempo.minutos !== 0  ){
+      setId(tiempo.id)
+      let horaRetantes = tiempo.horas;
+      let minutosRentes = tiempo.minutos;
+      restarTiempo(horaRetantes,minutosRentes)
     }
   }
+  //BUSCAR UNA SOLUCION PARA QUE SE EJECUTE  UNA SOLA VEZ YA QUE NO ENTIENDO POR QUE SE ESTA EJECUTANDO DOS VECES 
   useEffect(() => {
-    retomamosElTiempo();
-  }, []);
-  //------------------------------------------------------------------------//
+    retomamosElTiempo()
+  }, [])
 
-  // CLICK CUANDO SE DECLARA EL TIEMPO 
-  function clickEjecucion(e) {
+
+   // CLICK CUANDO SE DECLARA EL TIEMPO 
+   function clickEjecucion(e) {
     e.preventDefault();
     const {horas,minutos}  = JSON.parse(localStorage.getItem("tiempoRestanTarea"))
     // VALIDACION PARA QUE SE PA QUE ESTA PASANDO EL USUARIO 
@@ -177,12 +199,11 @@ export const ModelHoraDeLaTarea = ({
     setMostrarElegirTiempo(false);
     setId(data);
   }
-   //------------------------------------------------------------------------//
-  // REGLAR LPM 
-  // FUNCION QUE CALCULAR EL TIMEPO QUE PASO PARA HACER UNA RESTA CON EL TIEMPO LOCAL   Y RETOMAR  Y SEGUIR CORRIENDO 
+//------------------------------------------------------------------------//
 
-  
+
   useEffect(() => {
+    
     function calcularElTiempoRestanteCuandoElUsuarioNoEstaEnLaPagina() {
       
       const dataLocal = JSON.parse(localStorage.getItem("tiempoRestanTarea"));
@@ -230,31 +251,16 @@ export const ModelHoraDeLaTarea = ({
   }, []);
 
 
-  function mandarIdParaNoMastrarLasTareasCompletadas() {
-    const dataLocal = JSON.parse(localStorage.getItem("IdTareasHechas"));
-    const id = data;
-    setTodosLosIdsParaNoMostrar((prev) => [...prev, id]);
-
-    const newData = {
-      ...dataLocal[0],
-      ids:[...dataLocal[0].ids,id],
-    };
-    console.log(newData)
-    
-    localStorage.setItem("IdTareasHechas", JSON.stringify([newData]));
-  }
-
-
   return (
     <li className="contenedor-mostrar-hora-de-hacerla">
       <span>{dataTarea.tarea} </span>
-
       {id === data && <MostrarTiempoRestante tiempoRestante={tiempoRestante} />}
       {mostrarElegirTiempo && (
         <FormElegirTiempo
           error={error}
           setTiempo={setTiempo}
           clickEjecucion={clickEjecucion}
+          tiempo={tiempo}
         />
       )}
       {!mostrarElegirTiempo && (
