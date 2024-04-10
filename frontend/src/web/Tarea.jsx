@@ -3,8 +3,8 @@ import { ComponenteActualizarTarea } from "./ComponenteActualizarTarea";
 import { obtenerCredencialesUse } from "../funciones globales/obtenenerDatosDelLocalStorage";
 import { contextoEstadoEliminarTarea } from "../Contextos/EstadoEliminarTarea";
 import { fondoDePantalla } from "../diseños de pago/FondoDePantalla";
-import iconEliminar from "../../public/Icons/eliminar.svg"
-import iconEditar from "../../public/Icons/editar.svg"
+import iconEliminar from "../../public/Icons/eliminar.svg";
+import iconEditar from "../../public/Icons/editar.svg";
 
 export const Tarea = ({
   tarea,
@@ -13,19 +13,47 @@ export const Tarea = ({
   setTiempoFondoDePantalla,
 }) => {
   // [tarea]: nos retorna todas las tareas
-  
 
-  const { eliminoUnaTareas, setEliminoUnaTarea } = useContext(contextoEstadoEliminarTarea);
+  const { eliminoUnaTareas, setEliminoUnaTarea } = useContext(
+    contextoEstadoEliminarTarea
+  );
   const [tareaId, setTareaId] = useState(0);
   const [mostrarModelActualizar, setMostrarModelActualizar] = useState(false);
   const [currentHour, setCurrentHour] = useState(new Date());
   const [tiempoRestante, setTiempoRestante] = useState("");
+
+
+
+  // useEffect(() => {
+  //   if(tareaId !== 0){
+  //     setArrayConTodasLasTareasQueYaPasaronSuTiempo(prev => {
+  //       const newIds = prev.filter((t)=> t !== tareaId)
+  //       return newIds
+  //       });
+  //   }
+  // }, [eliminoUnaTareas])
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   //------------------------------------------------------------------------//
   // vinculamos los puntos con las tareas
   function VincularLosPuntos() {
     const TareaPuntos = puntosTareas.find((TP) => TP.tareaID === tarea.tareaID);
     return TareaPuntos;
   }
+  //------------------------------------------------------------------------//
   //------------------------------------------------------------------------//
   async function eliminarTarea(tareaID) {
     try {
@@ -50,8 +78,8 @@ export const Tarea = ({
     }
   }
   //------------------------------------------------------------------------//
+  //------------------------------------------------------------------------//
   function verSiLaTareaLlegoASuHoraDeDestino() {
-
     function verSiElTiempoLlego() {
       const tiempo = tarea.tiempo;
       const [targetHours, targetMinutes] = tiempo.split(":"); // Divide la cadena en horas y minutos
@@ -60,21 +88,20 @@ export const Tarea = ({
       targetDate.setMinutes(parseInt(targetMinutes)); // Establece los minutos objetivo
       return currentHour >= targetDate; // Compara la hora actual con la hora objetivo
     }
-
     // si la hora llego  a su tiempo o se paso
     if (verSiElTiempoLlego()) {
       const id = tarea.tareaID;
+      console.log(id)
       setArrayConTodasLasTareasQueYaPasaronSuTiempo((prev) =>
         prev.includes(id) ? prev : [...prev, id]
       );
     }
   }
   // se va a ejecutar una sola vez  para que se muestren todas  las tarea que se tienen que hacer
-  // hasta que se ejecuta la misma funcion pero cada 1min 
-
+  // hasta que se ejecuta la misma funcion pero cada 1min
   useEffect(() => {
-    verSiLaTareaLlegoASuHoraDeDestino()
-  }, [])
+    verSiLaTareaLlegoASuHoraDeDestino();
+  }, []);
   //------------------------------------------------------------------------//
   function calcularCuantoTiempoRestanteLeQueda(hora) {
     if (hora) {
@@ -103,84 +130,103 @@ export const Tarea = ({
     }
   }
   //------------------------------------------------------------------------//
-
-  function eliminarTodosLosIdsAlmacenadosCuandonSeaOtroDia(){
-    const date = new Date()
-    const dia = date.getDay()
-    
-   const dataLocal = JSON.parse( localStorage.getItem("IdTareasHechas"))
-   
-   if(dataLocal){
-    if(dataLocal[0].dia  !== dia){
-      console.log("hola como estas")
-      localStorage.removeItem("IdTareasHechas")
-   }
-    // mesansaje : cuando se elimine el almacenamiento se va tener que resfrescar para que se vuelva a crear el almacenamiento por que si no donde se van mandar los ids
+  function eliminarTodosLosIdsAlmacenadosCuandonSeaOtroDia() {
+    const date = new Date();
+    const dia = date.getDay();
+    const dataLocal = JSON.parse(localStorage.getItem("IdTareasHechas"));
+    if (dataLocal) {
+      if (dataLocal[0].dia !== dia) {
+        console.log("hola como estas");
+        localStorage.removeItem("IdTareasHechas");
+      }
+      // mesansaje : cuando se elimine el almacenamiento se va tener que resfrescar para que se vuelva a crear el almacenamiento por que si no donde se van mandar los ids
+    }
   }
-  }
-
   // futura useEffet para que todas las cosas relacionadas con el tiempo para solo tener un solo pucle y que todo dependa de uno
   useEffect(() => {
-      //----------------------------------------------------------------------//
+    //----------------------------------------------------------------------//
     setTiempoRestante(calcularCuantoTiempoRestanteLeQueda(tarea.tiempo));
-  //----------------------------------------------------------------------//
+    //----------------------------------------------------------------------//
     const interval = setInterval(() => {
       //----------------------------------------------------------------------//
       verSiLaTareaLlegoASuHoraDeDestino();
       //----------------------------------------------------------------------//
-      const tiempoDeLasTarea = calcularCuantoTiempoRestanteLeQueda(tarea.tiempo) 
+      const tiempoDeLasTarea = calcularCuantoTiempoRestanteLeQueda(tarea.tiempo);
       setTiempoRestante(tiempoDeLasTarea);
       //----------------------------------------------------------------------//
-      // fondo 
-      const tiempoEnTiempoReal = fondoDePantalla()
+      // fondo
+      const tiempoEnTiempoReal = fondoDePantalla();
       setTiempoFondoDePantalla(tiempoEnTiempoReal);
 
-
-      // FD : CUANDO DIA CAMBIE Y NO SE EL MISMO DIA SE VA A ELIMINAR EL ALAMACENAMIENTO 
-      eliminarTodosLosIdsAlmacenadosCuandonSeaOtroDia()
-      
-    }, 1000);
+      // FD : CUANDO DIA CAMBIE Y NO SE EL MISMO DIA SE VA A ELIMINAR EL ALAMACENAMIENTO
+      eliminarTodosLosIdsAlmacenadosCuandonSeaOtroDia();
+    }, 60000);
 
     return () => clearInterval(interval);
   }, [tarea.tiempo]);
+
   //------------------------------------------------------------------------//
-
-
 
   return (
     <div className="tarea" key={tarea.tareaID}>
-      {tarea.tareaID === tareaId && mostrarModelActualizar ? <ComponenteActualizarTarea  id={tareaId}  setMostrarModelActualizar={setMostrarModelActualizar}/>
-       : (
+      {tarea.tareaID === tareaId && mostrarModelActualizar ? (
+        <ComponenteActualizarTarea
+          id={tareaId}
+          setMostrarModelActualizar={setMostrarModelActualizar}
+        />
+      ) : (
         <>
           <div className="tarea-contendor">
             <div className="tarea-contendor-info">
               <span className="tarea-tarea">{tarea.tarea}</span>
               <div className="contendor-datos-tareas">
-                <span > dias:{VincularLosPuntos()? VincularLosPuntos().tareaHecha + VincularLosPuntos().tareaNoHecha : 0} </span>
-                <span>TH:{VincularLosPuntos() ? VincularLosPuntos().tareaHecha : 0} </span>
-                <span>TNH: {VincularLosPuntos() ? VincularLosPuntos().tareaNoHecha : 0} </span>
+                <span>
+                  dias:
+                  {VincularLosPuntos()
+                    ? VincularLosPuntos().tareaHecha +
+                      VincularLosPuntos().tareaNoHecha
+                    : 0}{" "}
+                </span>
+                <span>
+                  TH:{VincularLosPuntos() ? VincularLosPuntos().tareaHecha : 0}{" "}
+                </span>
+                <span>
+                  TNH:{" "}
+                  {VincularLosPuntos() ? VincularLosPuntos().tareaNoHecha : 0}{" "}
+                </span>
               </div>
             </div>
             <div className="tarea-contenedor-btns">
-              <button onClick={() => eliminarTarea(tarea.tareaID)} className="tarea-btn" >
-                <img  className="icon-tarea" src={iconEliminar} alt="" />
+              <button
+                onClick={() => {
+                  eliminarTarea(tarea.tareaID)
+                  setTareaId(tarea.tareaID);
+                }}
+                className="tarea-btn"
+              >
+                <img className="icon-tarea" src={iconEliminar} alt="" />
               </button>
-              <button onClick={() => {setMostrarModelActualizar(true) ;setTareaId(tarea.tareaID) }}className="tarea-btn">
+              <button
+                onClick={() => {
+                  setMostrarModelActualizar(true);
+                  setTareaId(tarea.tareaID);
+                }}
+                className="tarea-btn"
+              >
                 <img className="icon-tarea" src={iconEditar} alt="" />
               </button>
             </div>
           </div>
-  <div className="conts">
-  <div className="contenedor-tiempo-tarea">
-            <div style={{ width: "100%" }} className="tarea-tiempo">
-              {tiempoRestante}
+          <div className="conts">
+            <div className="contenedor-tiempo-tarea">
+              <div style={{ width: "100%" }} className="tarea-tiempo">
+                {tiempoRestante}
+              </div>
+              <div style={{ width: "100%" }} className="tarea-tiempo">
+                {tarea.tiempo}
+              </div>
             </div>
-            <div style={{ width: "100%" }} className="tarea-tiempo">
-              {tarea.tiempo}
-            </div>
-        
           </div>
-  </div>
         </>
       )}
     </div>

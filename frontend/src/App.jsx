@@ -14,29 +14,26 @@ import { AñadirNota } from "./web/AñadirNota";
 import { calculateTaskDistribution } from "./funciones globales/distribuirTareasEnColumnas";
 import { Nota } from "./web/Nota";
 import { fondoDePantalla } from "./diseños de pago/FondoDePantalla";
-import { useFetcher, useNavigate } from "react-router-dom";
+import { contextoEjecutarRetomarTiempo } from "./Contextos/ProviderEjecutarRetomarTiempo";
 
 
 export const App = () => {
   //contextos
   const { tareaUser, setTareaUser } = useContext(contextoTareas);
   const { eliminoUnaTareas,añadirTarea,actualizoUnaTarea } = useContext(contextoEstadoEliminarTarea);
-
+  const {todosLosIdsParaNoMostrar,setTodosLosIdsParaNoMostrar,envioElPunto} = useContext(contextoEjecutarRetomarTiempo)
   // estados
-  const [envioElPunto, setEnvioElPunto] = useState(false);
   const [tareaTops, setTareaTops] = useState([]);
   const [distribucionTareas, setDistribucionTareas] = useState([]);
   const [puntosTareas, setPuntosTareas] = useState([]);
   const [arrayConTodasLasTareasQueYaPasaronSuTiempo,setArrayConTodasLasTareasQueYaPasaronSuTiempo] = useState([]);
-  const [todosLosIdsParaNoMostrar, setTodosLosIdsParaNoMostrar] = useState([]);
   const [idsTareaNoPletadas, setIdsTareaNoPletadas] = useState([]);
   const [mostrarTopOTareas, setMostrarTopOTareas] = useState({mostrasTareasTops: false,mostrarParaHacer: true,});
   
   const [tiempoFondoDePantalla,setTiempoFondoDePantalla] = useState(fondoDePantalla())
 
-  
 
-
+  //---------------------------------------------------------------------------------------------------//
   //---------------------------------------------------------------------------------------------------//
   
   // EFFECT  PARA CREAR UN ESPACION EN EL LOCALSTORAGE (IdTareasHechas)
@@ -50,7 +47,8 @@ export const App = () => {
     crearEspacioEnLocalStorageIdTareasHechas()
   }, [])
  //---------------------------------------------------------------------------------------------------//
-  
+  //---------------------------------------------------------------------------------------------------//
+
   // EFFECT  PARA OBTENER TODOS LOS IDS ALMACENADOS DURANTE EL DIA  PARA NO MOSTRAR 
   useEffect(() => {
     function obtenerLosIdTareaQueYaFueronCompletadaDuranteDia(){
@@ -63,6 +61,13 @@ export const App = () => {
   }, []);
 
   //---------------------------------------------------------------------------------------------------//
+  //---------------------------------------------------------------------------------------------------//
+
+
+
+
+
+
   // EFECTO  ?
   useEffect(() => {
     // FUNCION  PARA NO MOSTRAR LA TAREA QUE YA FUE COMPLETADA 
@@ -70,7 +75,6 @@ export const App = () => {
     function verSiLaTareaNoSeTieneQueMostrar() {
       const arrayIdsNoMostrar = todosLosIdsParaNoMostrar;
       const arrayIds = arrayConTodasLasTareasQueYaPasaronSuTiempo;
-
       for (let i = 0; i < arrayIdsNoMostrar.length; i++) {
         const bool = arrayIds.includes(arrayIdsNoMostrar[i]);
         if (bool) {
@@ -80,19 +84,21 @@ export const App = () => {
           }
         }
       }
-
       return arrayIds;
     }
-
     setIdsTareaNoPletadas(verSiLaTareaNoSeTieneQueMostrar());
   }, [arrayConTodasLasTareasQueYaPasaronSuTiempo, todosLosIdsParaNoMostrar]);
 
   //---------------------------------------------------------------------------------------------------//
+  //---------------------------------------------------------------------------------------------------//
+
   useEffect(() => {
     const tareasUsuarioEnCulmnas = calculateTaskDistribution(tareaUser)
     setDistribucionTareas(tareasUsuarioEnCulmnas);
   }, [tareaUser]);
-  //---------------------------------------------------------------------------------------------------//Ç
+  //---------------------------------------------------------------------------------------------------//
+  //---------------------------------------------------------------------------------------------------//
+
   // OBETNEMOS TODAS LAS TAREAS DEL SERVIDOR , HISTORIAL , TAREA TOPS 
   async function obtenerTareasUserYTareasTops() {
     try {
@@ -113,15 +119,13 @@ export const App = () => {
           puntosTareas: tareas.puntosTareas,
         };
       }
-      // en caso contrario se devuelve un mensaje de error
-      else {
-        console.log("no se pudieron mandar los datos");
-      }
     } catch (error) {
       console.error("Error al obtener los datos:", error.message);
     }
   }
    //---------------------------------------------------------------------------------------------------//
+  //---------------------------------------------------------------------------------------------------//
+
   // EFFECT QUE TIENE EL CONTROL DE TODOS LOS CAMBIO DE LAS TAREAS QUE SE ESTAN LLAMANDO DE LA API 
   useEffect(() => {
     async function s() {
@@ -135,6 +139,8 @@ export const App = () => {
 
 
   //---------------------------------------------------------------------------------------------------//
+  //---------------------------------------------------------------------------------------------------//
+
   return (
     <div className="app">
       <div className="header-icon-menu"></div>
@@ -192,10 +198,6 @@ export const App = () => {
                   idsTareaNoPletadas.map((data) => (
                     <ModelHoraDeLaTarea
                       data={data}
-                      setEnvioElPunto={setEnvioElPunto}
-                      envioElPunto={envioElPunto}
-                      setTodosLosIdsParaNoMostrar={setTodosLosIdsParaNoMostrar}
-                      todosLosIdsParaNoMostrar={todosLosIdsParaNoMostrar}
                     />
                   ))}
               </ul>

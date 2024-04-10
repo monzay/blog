@@ -6,6 +6,7 @@ export const contextoPasarIdTareaCompletada = createContext();
 export const ProviderPasarIdTareaCompletada = ({ children }) => {
 
   const [idTareaHecha, setIdTareaHecha] = useState(0);
+
   
 
   // EFECTO PARA VER SI EXITE EL ESPACIO EN EL LOCALSTORAGE Y NO LO CRAMOS  
@@ -111,8 +112,9 @@ export const ProviderPasarIdTareaCompletada = ({ children }) => {
     
    eliminarLosIdsDiariamente()
   }, [])
-  
 
+  
+  
 
   return (
     <contextoPasarIdTareaCompletada.Provider

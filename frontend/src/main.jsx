@@ -11,6 +11,7 @@ import { EstadoEliminarTarea } from "./Contextos/EstadoEliminarTarea";
 import { ProviderPasarIdTareaCompletada } from "./Contextos/ProviderPasarIdTareaCompletada";
 import { EstadosCrudNotas } from "./Contextos/EstadosCrudNotas";
 
+import { ProviderEjecutarRetomarTiempo } from "./Contextos/ProviderEjecutarRetomarTiempo";
 const router = createBrowserRouter([
   {
     path: "/login",
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
       {
         path: "/app",
         element: (
+          <ProviderEjecutarRetomarTiempo>
           <EstadosCrudNotas>
             <ProviderPasarIdTareaCompletada>
               <EstadoEliminarTarea>
@@ -44,6 +46,7 @@ const router = createBrowserRouter([
               </EstadoEliminarTarea>
             </ProviderPasarIdTareaCompletada>
           </EstadosCrudNotas>
+          </ProviderEjecutarRetomarTiempo>
         ),
       },
     ],
