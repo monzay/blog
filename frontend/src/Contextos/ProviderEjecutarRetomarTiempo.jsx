@@ -11,14 +11,19 @@ export const ProviderEjecutarRetomarTiempo = ({children}) => {
     const [envioElPunto,setEnvioElPunto] = useState(false)
 
 
-
-
     // TODAS ESTA FUNCIONES SON PARA QUE SE EJECUTE LA FUNCION PARA RETOMAR EL TIEMPO  DEL LOCALSTORAGE
     // FUNCION PARA MANDAR EL PUNTO  CUADNO RETOMAMOS EL TIEMPO 
+
+
+
+    useEffect(() => {
+      console.log(tiempoRestante)
+    }, [tiempoRestante])
+    
+
       async function mandarDarPuntoDeLaTareaCompletada() {
         try {
           const idLocal = JSON.parse(localStorage.getItem("tiempoRestanTarea"))
-          // revisar 
           const datoDeLaTarea = {
             tareaID: idLocal.id ,
             tareaHecha: 1,
@@ -70,15 +75,28 @@ export const ProviderEjecutarRetomarTiempo = ({children}) => {
         }, 60000);
       }
       function retomamosElTiempo() {
-
         const tiempo = JSON.parse(localStorage.getItem("tiempoRestanTarea"));
-        if(tiempo.horas !== 0 || tiempo.minutos !== 0  ){
-          setId(tiempo.id)
-          let horaRetantes = tiempo.horas;
-          let minutosRentes = tiempo.minutos;
-          restarTiempo(horaRetantes,minutosRentes)
+
+        if(tiempo){
+
+          const Thoras = tiempo.horas
+          const Tminutos = tiempo.minutos
+          const Tid = tiempo.id
+
+         
+          if(Thoras !== 0 || Tminutos !== 0  ){
+            setId(Tid);
+            let horaRetantes = Thoras;
+            let minutosRentes = Tminutos;
+            restarTiempo(horaRetantes,minutosRentes);
+          }
         }
+ 
       }
+      useEffect(() => {
+        const tiempo = JSON.parse(localStorage.getItem("tiempoRestanTarea"));
+        setTiempoRestante(prev => ({...prev,horas:tiempo.horas ,minutos:tiempo.minutos}))
+      }, [])
       useEffect(() => {
         retomamosElTiempo()
       }, [])

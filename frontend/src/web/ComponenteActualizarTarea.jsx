@@ -57,8 +57,6 @@ export const ComponenteActualizarTarea = ({id,setMostrarModelActualizar}) => {
       EDT.removeEventListener("keyup", handler);
     };
   }, [alturaTextarea]);
-
-  
   return (
     <div className="model-añadir-tarea">
       <form className="model-from-añadir-tarea"onSubmit={(e) => actualizarTarea(id,e) }>

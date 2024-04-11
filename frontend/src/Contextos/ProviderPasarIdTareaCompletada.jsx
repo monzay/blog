@@ -24,9 +24,6 @@ export const ProviderPasarIdTareaCompletada = ({ children }) => {
 
 
   useEffect(() => {
-
-
-
     const date =  new Date()
     const dia = date.getDay()
     const horas = date.getHours(); 
@@ -64,8 +61,8 @@ export const ProviderPasarIdTareaCompletada = ({ children }) => {
         try {
           const datoDeLaTarea = {
             tareaID: idTarea,
-            tareaEcha: 0,
-            tareaNoEcha: 1,
+            tareaHecha: 0,
+            tareaNoHecha: 1,
           };
           
           const response = await fetch("http://localhost:3000/app/seguimiento", {
@@ -74,6 +71,7 @@ export const ProviderPasarIdTareaCompletada = ({ children }) => {
             body: JSON.stringify(datoDeLaTarea),
           });
           const data = await response.json();
+          console.log(data)
         } catch (error) {
           console.error("Error al obtener los datos:", error.message);
         }
@@ -89,13 +87,11 @@ export const ProviderPasarIdTareaCompletada = ({ children }) => {
         // ELIMINAMOS TODOS LOS IDS DE LAS TAREAS
         localStorage.setItem("IdTareasHechas",JSON.stringify([{...diaLocal[0],ids:[]}]))
       }
-    }
-    procesamiento()
+    }procesamiento()
     
     // FUNCION PRINCINPAL
     function eliminarLosIdsDiariamente (){
     // CALCULAMOS CUANDO FALTA QUE SEAN LAS 00:00 
-    
     let tiempoHastaLas12 = 0;
     if (dia === 0) tiempoHastaLas12 = 24 * 60 * 60 * 1000; 
     else tiempoHastaLas12 =  Math.abs(horas - 24) * 60 * 1000 -  Math.abs(minutos - 60) * 1000 
@@ -113,7 +109,6 @@ export const ProviderPasarIdTareaCompletada = ({ children }) => {
    eliminarLosIdsDiariamente()
   }, [])
 
-  
   
 
   return (

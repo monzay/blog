@@ -2,7 +2,6 @@ import { db } from "../index.mjs";
 
 export const seguimientoTarea = (req, res) => {
   const { tareaID, tareaHecha, tareaNoHecha } = req.body;
-  console.log(req.body)
   
     db.run("INSERT INTO seguimiento_tareas(tareaID,tarea_hecha,tarea_no_hecha) VALUES(?,?,?)", [tareaID,tareaHecha,tareaNoHecha],(err) => {
       if (err) {

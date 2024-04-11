@@ -11,8 +11,7 @@ export const ModelHoraDeLaTarea = ({ data}) => {
 
   const { tareaUser } = useContext(contextoTareas);
   const { setIdTareaHecha } = useContext(contextoPasarIdTareaCompletada);
-  const {setEnvioElPunto,envioElPunto,tiempoRestante,setTiempoRestante,setId,id,indentificador,setIndentificador,setTodosLosIdsParaNoMostrar} =   useContext(contextoEjecutarRetomarTiempo)
-
+  const {setEnvioElPunto,envioElPunto,tiempoRestante,setTiempoRestante,setId,id,setIndentificador,setTodosLosIdsParaNoMostrar} =   useContext(contextoEjecutarRetomarTiempo)
   
   const [dataTarea, setDataTarea] = useState({});
   const [mostrarElegirTiempo, setMostrarElegirTiempo] = useState(false);
@@ -32,7 +31,6 @@ export const ModelHoraDeLaTarea = ({ data}) => {
       );
     }
   }, []);
-
   //------------------------------------------------------------------------//
   // FUNCION  QUE GUARDA EL TIEMPO QUE TRANSCURRIO Y LO GUARDA  AL SALIR DE LA PAGINA O REFRESCAR
   function guardarTiempoCuadoElUsuarioCierreLaPagina() {
@@ -91,6 +89,7 @@ export const ModelHoraDeLaTarea = ({ data}) => {
   }
   // SUB FUNCION
   function timepoActual() {
+
     const date = new Date();
     const horas = date.getHours();
     const minutos = date.getMinutes();
@@ -101,6 +100,7 @@ export const ModelHoraDeLaTarea = ({ data}) => {
   }
   // SUB FUNCION
   function restarTiempo(horasRestantes, minutosRentes) {
+
     const interval = setInterval(() => {
       if (minutosRentes !== 0) {
         minutosRentes -= 1;
@@ -129,11 +129,8 @@ export const ModelHoraDeLaTarea = ({ data}) => {
   // FRUNCION DECLARACION DEL TIEMPO
   function calcularTiempoQueElUsuarioDeclaro() {
     setIndentificador({ tiempoDeclado: true, retomarTiempo: false });
-
     let horasRestantes = tiempo.indexOf(":") === -1 ? 0 : tiempo.split(":")[0];
-    let minutosRentes =
-      tiempo.indexOf(":") === -1 ? tiempo : tiempo.split(":")[1];
-
+    let minutosRentes = tiempo.indexOf(":") === -1 ? tiempo : tiempo.split(":")[1];
     setTiempoRestante({
       horas: horasRestantes,
       minutos: minutosRentes,
@@ -147,6 +144,7 @@ export const ModelHoraDeLaTarea = ({ data}) => {
   // CLICK CUANDO SE DECLARA EL TIEMPO
   function clickEjecucion(e) {
     e.preventDefault();
+
     const { horas, minutos } = JSON.parse(
       localStorage.getItem("tiempoRestanTarea")
     );
@@ -166,7 +164,7 @@ export const ModelHoraDeLaTarea = ({ data}) => {
   }
   
   //------------------------------------------------------------------------//
-
+  // FUNCIONES PARA ARREGLAR EN UN FUTURO 
   useEffect(() => {
     function calcularElTiempoRestanteCuandoElUsuarioNoEstaEnLaPagina() {
       const dataLocal = JSON.parse(localStorage.getItem("tiempoRestanTarea"));
@@ -215,7 +213,7 @@ export const ModelHoraDeLaTarea = ({ data}) => {
   return (
     <li className="contenedor-mostrar-hora-de-hacerla">
       <span>{dataTarea.tarea } </span>
-      {id === data && <MostrarTiempoRestante tiempoRestante={tiempoRestante} />}
+      {id === data && <MostrarTiempoRestante />}
       {mostrarElegirTiempo && (
         <FormElegirTiempo
           error={error}

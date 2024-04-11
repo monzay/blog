@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { contextoEjecutarRetomarTiempo } from '../../Contextos/ProviderEjecutarRetomarTiempo'
+export const MostrarTiempoRestante = () => {
 
-export const MostrarTiempoRestante = ({tiempoRestante}) => {
+  const {tiempoRestante } = useContext(contextoEjecutarRetomarTiempo)
 
 
-  const horaFormateada = tiempoRestante.horas ? tiempoRestante.horas : 0
+  const horaFormateada = tiempoRestante.horas 
   const minutosFormateados = tiempoRestante.minutos < 10 ? `0${tiempoRestante.minutos}` : tiempoRestante.minutos;
   return (
     <div className="contenedor-tiempo-corriendo">
