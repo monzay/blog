@@ -16,6 +16,7 @@ import 'dotenv/config'
 
 import url from "url"
 import path from "path";
+import { CORS_FRONTEND, PORT } from "./configuracion";
 
 function rutaDBsqlite (){
   const __filename = url.fileURLToPath(import.meta.url);
@@ -45,7 +46,6 @@ function eliminarCadaSemanaLosPuntosTareas(db) {
     }, 7 * 24 * 60 * 60 * 1000); 
   }, tiempoHastaProximoLunes); 
 }
-
 const sqlite3 = sqlite.verbose() 
 export const db =  new sqlite3.Database(rutaDBsqlite())
 
@@ -53,7 +53,7 @@ eliminarCadaSemanaLosPuntosTareas(db)
 
 const app = express()
 
-app.use(cors())
+app.use(cors({origin:CORS_FRONTEND}))
 app.use(express.json())
 app.use(morgan("dev"))
 
@@ -75,6 +75,6 @@ app.post("/app/seguimiento",seguimientoTarea)
 
 
 
-app.listen(process.env.PORT, () => {
+app.listen(PORT, () => {
   console.log("se devanto el servidor")
   });
