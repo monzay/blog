@@ -9,11 +9,13 @@ import { tareas } from "./path/crudTarea/añadir.mjs";
 import { seguimientoTarea } from "./path/seguimientoTarea.mjs";
 import { eliminar } from "./path/crudTarea/eliminar.mjs";
 import { actualizar } from "./path/crudTarea/actualizar.mjs";
+import 'dotenv/config'
+
+
 
 
 import url from "url"
 import path from "path";
-
 
 function rutaDBsqlite (){
   const __filename = url.fileURLToPath(import.meta.url);
@@ -73,6 +75,6 @@ app.post("/app/seguimiento",seguimientoTarea)
 
 
 
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
   console.log("se devanto el servidor")
   });
