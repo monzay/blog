@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { App } from "./App";
-import { Login } from "./login singUp/Login";
-import { SingUp } from "./login singUp/singUp";
+import { Login } from "./formalariosRegistros/Login";
+import { SingUp } from "./formalariosRegistros/SingUp";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Verificar } from "./login singUp/Verificar";
+import { Verificar } from "./formalariosRegistros/Verificar";
 import { ProviderSIngUp } from "./Contextos/ProviderSIngUp";
 import { ProviderTareas } from "./Contextos/ProviderTareas";
 import { EstadoEliminarTarea } from "./Contextos/EstadoEliminarTarea";
