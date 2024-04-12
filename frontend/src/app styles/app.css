@@ -68,6 +68,8 @@ main{
 .seccion-tareas{
     width: 80%;
     height:100%;
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 
@@ -96,6 +98,10 @@ main{
     backdrop-filter: blur(5px);
     display: flex;
     align-items: center;
+}
+.tarea:hover{
+  transition: 0.4s;
+  background-color: rgba(255, 255, 255, 0.2);
 }
 .tarea-contendor{
   width: 80%;
@@ -158,6 +164,8 @@ main{
 .contenedor-seccion-mostrar-hora-de-hacer-la-tarea{
   width: 100%;
   height: 10%;
+  display: flex;
+  align-items: center;
 }
 .contenedor-usuarios-tops{
     width: 100%;
@@ -435,7 +443,6 @@ width: 200px;
 height: 40px;
 position: fixed;
 display: flex;
-
 backdrop-filter: blur(2px);
 border-radius: 10px;
 align-items: center;
@@ -491,6 +498,11 @@ background-position: 0% 50%
   opacity: 0;
   text-align: center;
     word-break: break-all;
+}
+
+.contenedor-mostrar-hora-de-hacerla:hover{
+  background-color:  rgba(255, 255, 255, 0.2);
+  transition: 0.4s;
 }
 
 
@@ -713,8 +725,42 @@ width: 0px;
   width: 100%;
   filter: invert(100%) saturate(0);
 }
+.contenedor-mostrar-las-tarea-para-hacer{
+
+}
+.contenedor-input-componente-mostrar-hora-de-hacer{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.input-componente-mostrar-hora-de-hacer{
+  background-color: transparent;
+  color: white;
+  text-align: center;
+  font-size: 15px;
+}
+.contendor-mostrar-tareaTop-y-tareas{
+  overflow: hidden;
+  overflow-y: scroll;  
+}
+/* Estilos para el scrollbar */
+/* Estilo del track */
+::-webkit-scrollbar {
+  width: 3px; /* Ancho del scrollbar */
+}
 
 
+
+/* Estilo del thumb (la parte deslizante del scrollbar) */
+::-webkit-scrollbar-thumb {
+  background-color: #ffffff; /* Color del thumb */
+  border-radius: 6px; /* Radio de borde del thumb */
+}
+
+/* Estilo del track (la parte del scrollbar que no es el thumb) */
+::-webkit-scrollbar-track {
+  background-color: #000000; /* Color del track */
+}
 @media screen and (max-width: 480px) {
 .app{
 width: 100%;

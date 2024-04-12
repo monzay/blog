@@ -89,7 +89,6 @@ export const ModelHoraDeLaTarea = ({ data}) => {
   }
   // SUB FUNCION
   function timepoActual() {
-
     const date = new Date();
     const horas = date.getHours();
     const minutos = date.getMinutes();
@@ -124,7 +123,7 @@ export const ModelHoraDeLaTarea = ({ data}) => {
           mandarIdParaNoMastrarLasTareasCompletadas();
         }
       }
-    }, 60000);
+    }, 1000);
   }
   // FRUNCION DECLARACION DEL TIEMPO
   function calcularTiempoQueElUsuarioDeclaro() {

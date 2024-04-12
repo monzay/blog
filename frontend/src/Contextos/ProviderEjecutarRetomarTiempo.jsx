@@ -15,12 +15,7 @@ export const ProviderEjecutarRetomarTiempo = ({children}) => {
     // FUNCION PARA MANDAR EL PUNTO  CUADNO RETOMAMOS EL TIEMPO 
 
 
-
-    useEffect(() => {
-      console.log(tiempoRestante)
-    }, [tiempoRestante])
     
-
       async function mandarDarPuntoDeLaTareaCompletada() {
         try {
           const idLocal = JSON.parse(localStorage.getItem("tiempoRestanTarea"))
@@ -54,49 +49,43 @@ export const ProviderEjecutarRetomarTiempo = ({children}) => {
           ids:[...dataLocal[0].ids,id],
         };
         localStorage.setItem("IdTareasHechas", JSON.stringify([newData]));
-    
       }
-      function restarTiempo (horasRestantes,minutosRentes){
+      function restarTiempo (horasRestantes,minutosRentes,Tid,ThoraEnLaQueComenzo){
+
         const interval = setInterval(() => {
           if (minutosRentes !== 0) {
             minutosRentes -= 1;
-            setTiempoRestante((prev) => ({...prev, horas: horasRestantes,minutos: minutosRentes}));
+            setTiempoRestante({ horas: horasRestantes,minutos: minutosRentes,id:Tid,horaEnLaQueComenzo:ThoraEnLaQueComenzo});
           } else {
             if (horasRestantes !== 0) {
               horasRestantes -= 1;
               minutosRentes = 59;
-              setTiempoRestante((prev) => ({...prev,horas: horasRestantes,minutos: minutosRentes,}));
+              setTiempoRestante({ horas: horasRestantes,minutos: minutosRentes,id:Tid,horaEnLaQueComenzo:ThoraEnLaQueComenzo});
             } else {
               clearInterval(interval);
               mandarDarPuntoDeLaTareaCompletada();
               mandarIdParaNoMastrarLasTareasCompletadas();
             }
           }
-        }, 60000);
+        }, 1000);
       }
       function retomamosElTiempo() {
         const tiempo = JSON.parse(localStorage.getItem("tiempoRestanTarea"));
-
         if(tiempo){
-
+          setTiempoRestante(tiempo)          
           const Thoras = tiempo.horas
           const Tminutos = tiempo.minutos
           const Tid = tiempo.id
-
+          const ThoraEnLaQueComenzo = tiempo.horaEnLaQueComenzo
          
           if(Thoras !== 0 || Tminutos !== 0  ){
             setId(Tid);
             let horaRetantes = Thoras;
             let minutosRentes = Tminutos;
-            restarTiempo(horaRetantes,minutosRentes);
+            restarTiempo(horaRetantes,minutosRentes,Tid,ThoraEnLaQueComenzo);
           }
         }
- 
       }
-      useEffect(() => {
-        const tiempo = JSON.parse(localStorage.getItem("tiempoRestanTarea"));
-        setTiempoRestante(prev => ({...prev,horas:tiempo.horas ,minutos:tiempo.minutos}))
-      }, [])
       useEffect(() => {
         retomamosElTiempo()
       }, [])

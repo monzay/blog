@@ -22,6 +22,7 @@ export const FormElegirTiempo = ({ setTiempo,tiempo, clickEjecucion, error }) =>
           onChange={(e) => setTiempo(e.target.value)}
           value={tiempo}
           maxLength="5"
+          placeholder="tiempo"
 />
         <button className="btn-componente-mostrar-hora-de-la-tarea">
           enviar

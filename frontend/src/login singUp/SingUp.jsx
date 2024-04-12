@@ -67,8 +67,13 @@ export const SingUp = () => {
           body: JSON.stringify(credencialesUser),
         });
         const data = await response.json();
-          setError(data.mensaje)
-          navegate("/login")
+        if(response.ok){
+          if(data.mensaje === "La cuenta ya existe"){
+            setError(data.mensaje)
+          }else{
+            navegate("/login")
+          }
+        }
       }
     } catch (error) {
       console.log(error.message);

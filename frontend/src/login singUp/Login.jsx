@@ -22,25 +22,31 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
   const {setAccesoApp} = useContext(contextoSingUp)
-
-
   const navegate  = useNavigate()
+
+
 
 
   const fromLogin = async (e) => {
     e.preventDefault();
     try {
-      // validaciones
-      if (email && password) {
+      function validarEmail(email) {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    }
+    if (!email.trim() &&  !password.trim()) {
+      setError("Por favor completa todos los campos.");
+      return;
+    }
+   else if (!validarEmail(email)) {
+        console.log("El correo electrónico es válido.");
+    }else{
+
         const credencialesUser = {
           email,
           password,
         };
-
-
-        // POST 
         const response = await fetch("http://localhost:3000/login", {
           method: "POST",
           headers: {
@@ -53,13 +59,19 @@ export const Login = () => {
           console.log("Error al recibir los datos");
         } else {
           const data = await response.json();
-          setError(data.mensaje)
-          console.log(data)
-          localStorage.setItem("credenciales",JSON.stringify(data.credenciales));
-          setAccesoApp(data.token)
-          navegate("/app")
-        }
+          if(response.ok){
+            if(data.mensaje === "no se encontro la cuenta") {
+              setError(data.mensaje)
+            }else{
+              localStorage.setItem("credenciales",JSON.stringify(data.credenciales));
+              setAccesoApp(data.token)
+              navegate("/app")
+            }
+          }else{
+          }
       }
+    }
+  
     } catch (error) {
       console.error(error.message);
     }

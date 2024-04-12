@@ -13,8 +13,6 @@ import { actualizar } from "./path/crudTarea/actualizar.mjs";
 
 import url from "url"
 import path from "path";
-import { clear, Console } from "console";
-
 
 
 function rutaDBsqlite (){
@@ -76,5 +74,5 @@ app.post("/app/seguimiento",seguimientoTarea)
 
 
 app.listen(3000, () => {
-    console.log(`pueto 3000`);
+  console.log("se devanto el servidor")
   });

@@ -161,6 +161,7 @@ export const App = () => {
                 {distribucionTareas[culumna]
                   ? distribucionTareas[culumna].map((tarea) => {
                       if (tarea.tarea === "añadir") return <AñadirTarea />;
+                      
                       else if (tarea.tarea === "añadir nota")
                         return <AñadirNota />;
                       else if (tarea.tipo == "nota")
@@ -193,7 +194,7 @@ export const App = () => {
               <ComponenteTodaslasTareaTops tareaTops={tareaTops} />
             )}
             {mostrarTopOTareas.mostrarParaHacer && (
-              <ul>
+              <ul className="contenedor-mostrar-las-tarea-para-hacer">
                 {idsTareaNoPletadas &&
                   idsTareaNoPletadas.map((data) => (
                     <ModelHoraDeLaTarea

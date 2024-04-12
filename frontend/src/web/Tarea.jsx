@@ -24,26 +24,6 @@ export const Tarea = ({
 
 
 
-  // useEffect(() => {
-  //   if(tareaId !== 0){
-  //     setArrayConTodasLasTareasQueYaPasaronSuTiempo(prev => {
-  //       const newIds = prev.filter((t)=> t !== tareaId)
-  //       return newIds
-  //       });
-  //   }
-  // }, [eliminoUnaTareas])
-  
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -91,7 +71,6 @@ export const Tarea = ({
     // si la hora llego  a su tiempo o se paso
     if (verSiElTiempoLlego()) {
       const id = tarea.tareaID;
-      console.log(id)
       setArrayConTodasLasTareasQueYaPasaronSuTiempo((prev) =>
         prev.includes(id) ? prev : [...prev, id]
       );

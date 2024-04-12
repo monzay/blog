@@ -18,7 +18,6 @@ export const sing_up = (req, res) => {
      res.status(400).json({ mensaje: "El campo 'password' debe tener al menos 6 caracteres." });
       return 
   }
-
   if (
     nombre &&
     typeof nombre === "string" &&
@@ -31,8 +30,8 @@ export const sing_up = (req, res) => {
     db.serialize(() => {
       // Verificar si el usuario ya existe
       db.get(
-        "SELECT email,password FROM sesiones WHERE email = ? AND password =  ?",
-        [email, password],
+        "SELECT email,password FROM sesiones WHERE email = ?",
+        [email],
         (err, row) => {
           if (err) {
             console.log("[-] error: " + err);
