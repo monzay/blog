@@ -8,7 +8,6 @@ export const ErrorRouter = () => {
 
     useEffect(() => {
     navegate("/singUp")
-
     }, [])
     
   return (

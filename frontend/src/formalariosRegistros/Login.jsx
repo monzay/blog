@@ -29,6 +29,7 @@ export const Login = () => {
 
 
 
+
   const fromLogin = async (e) => {
     e.preventDefault();
     try {
@@ -72,9 +73,8 @@ export const Login = () => {
           }
       }
     }
-  
     } catch (error) {
-      console.error(error.message);
+      console.error(error);
     }
   };
 
