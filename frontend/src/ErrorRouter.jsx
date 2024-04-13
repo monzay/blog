@@ -1,6 +1,6 @@
 import React from 'react'
-import { useNavigate ,useEffect} from 'react-router-dom'
-
+import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 export const ErrorRouter = () => {
 
   
@@ -8,7 +8,7 @@ export const ErrorRouter = () => {
 
     useEffect(() => {
     navegate("/singUp")
-    
+
     }, [])
     
   return (
