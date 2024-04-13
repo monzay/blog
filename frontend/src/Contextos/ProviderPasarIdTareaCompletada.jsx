@@ -1,5 +1,6 @@
 import React from "react";
 import { useState, createContext, useEffect } from "react";
+import { RUTA_BACKEND } from "../../configuracion";
 
 export const contextoPasarIdTareaCompletada = createContext();
 
@@ -65,7 +66,7 @@ export const ProviderPasarIdTareaCompletada = ({ children }) => {
             tareaNoHecha: 1,
           };
           
-          const response = await fetch("http://localhost:3000/app/seguimiento", {
+          const response = await fetch(`${RUTA_BACKEND}/app/seguimiento` , {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(datoDeLaTarea),

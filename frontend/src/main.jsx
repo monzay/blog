@@ -10,8 +10,8 @@ import { ProviderTareas } from "./Contextos/ProviderTareas";
 import { EstadoEliminarTarea } from "./Contextos/EstadoEliminarTarea";
 import { ProviderPasarIdTareaCompletada } from "./Contextos/ProviderPasarIdTareaCompletada";
 import { EstadosCrudNotas } from "./Contextos/EstadosCrudNotas";
-
 import { ProviderEjecutarRetomarTiempo } from "./Contextos/ProviderEjecutarRetomarTiempo";
+import { ErrorRouter } from "./ErrorRouter";
 const router = createBrowserRouter([
   {
     path: "/login",
@@ -53,7 +53,7 @@ const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <h1>la pagina no exite</h1>,
+    element:<ErrorRouter/>
   },
 ]);
 

@@ -4,6 +4,7 @@ import {useContext,useState} from "react"
 import { useEffect } from 'react';
 import {Link} from "react-router-dom"
 import { useNavigate } from 'react-router-dom';
+import { RUTA_BACKEND } from '../../configuracion';
 
 
 export const Login = () => {
@@ -47,7 +48,7 @@ export const Login = () => {
           email,
           password,
         };
-        const response = await fetch("http://localhost:3000/login", {
+        const response = await fetch(`${RUTA_BACKEND}/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

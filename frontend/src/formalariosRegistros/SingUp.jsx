@@ -4,6 +4,7 @@ import "../app styles/fromSingUp.css";
 import {Link} from "react-router-dom"
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { RUTA_BACKEND } from "../../configuracion";
 export const SingUp = () => {
 
   const  redirigirApp = useNavigate()
@@ -50,8 +51,6 @@ export const SingUp = () => {
         return;
       }
     else {
-
-      
         const credencialesUser = {
           nombre,
           email,
@@ -59,7 +58,7 @@ export const SingUp = () => {
         };
 
         
-        const response = await fetch("http://localhost:3000/singUp", {
+        const response = await fetch(`${RUTA_BACKEND}/singUp`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

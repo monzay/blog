@@ -15,6 +15,7 @@ import { calculateTaskDistribution } from "./funciones globales/distribuirTareas
 import { Nota } from "./web/Nota";
 import { fondoDePantalla } from "./diseños de pago/FondoDePantalla";
 import { contextoEjecutarRetomarTiempo } from "./Contextos/ProviderEjecutarRetomarTiempo";
+import { RUTA_BACKEND } from "../configuracion";
 
 
 export const App = () => {
@@ -102,7 +103,7 @@ export const App = () => {
   // OBETNEMOS TODAS LAS TAREAS DEL SERVIDOR , HISTORIAL , TAREA TOPS 
   async function obtenerTareasUserYTareasTops() {
     try {
-      const response = await fetch("http://localhost:3000/app", {
+      const response = await fetch(`${RUTA_BACKEND}/app` , {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ idUser: obtenerCredencialesUse().idUser }),

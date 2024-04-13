@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react'
+import { RUTA_BACKEND } from '../../configuracion';
 
 export const contextoEjecutarRetomarTiempo = createContext();
 export const ProviderEjecutarRetomarTiempo = ({children}) => {
@@ -25,7 +26,7 @@ export const ProviderEjecutarRetomarTiempo = ({children}) => {
             tareaNoHecha: 0,
           };
           
-          const response = await fetch("http://localhost:3000/app/seguimiento", {
+          const response = await fetch(`${RUTA_BACKEND}/app/seguimiento` , {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(datoDeLaTarea),
@@ -67,7 +68,7 @@ export const ProviderEjecutarRetomarTiempo = ({children}) => {
               mandarIdParaNoMastrarLasTareasCompletadas();
             }
           }
-        }, 1000);
+        }, 60000);
       }
       function retomamosElTiempo() {
         const tiempo = JSON.parse(localStorage.getItem("tiempoRestanTarea"));
