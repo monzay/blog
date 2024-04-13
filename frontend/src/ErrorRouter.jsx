@@ -5,8 +5,10 @@ export const ErrorRouter = () => {
 
   
     const navegate = useNavigate()
+
     useEffect(() => {
     navegate("/singUp")
+    
     }, [])
     
   return (
