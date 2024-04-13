@@ -14,9 +14,14 @@ import 'dotenv/config'
 
 
 
+const CORS_FRONTEND =  process.env.CORS_FRONTEND || "http://localhost:5173"
+const PORT =  process.env.PORT || 3000 
+
+
+
 import url from "url"
 import path from "path";
-import { CORS_FRONTEND, PORT } from "./configuracion";
+
 
 function rutaDBsqlite (){
   const __filename = url.fileURLToPath(import.meta.url);
@@ -46,6 +51,7 @@ function eliminarCadaSemanaLosPuntosTareas(db) {
     }, 7 * 24 * 60 * 60 * 1000); 
   }, tiempoHastaProximoLunes); 
 }
+
 const sqlite3 = sqlite.verbose() 
 export const db =  new sqlite3.Database(rutaDBsqlite())
 
