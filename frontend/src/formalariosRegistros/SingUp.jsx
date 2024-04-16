@@ -18,8 +18,6 @@ export const SingUp = () => {
 
 
 
-
-
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -56,8 +54,6 @@ export const SingUp = () => {
           email,
           password,
         };
-
-        
         const response = await fetch(`${RUTA_BACKEND}/singUp`, {
           method: "POST",
           headers: {

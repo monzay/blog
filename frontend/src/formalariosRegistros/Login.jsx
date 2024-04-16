@@ -44,7 +44,6 @@ export const Login = () => {
    else if (!validarEmail(email)) {
         console.log("El correo electrónico es válido.");
     }else{
-
         const credencialesUser = {
           email,
           password,
@@ -116,28 +115,6 @@ export const Login = () => {
     <span>{error} </span>
     </div>
   </div>
-    // <div>
-    //   <h1>login</h1>
-    //   <form onSubmit={fromLogin}>
-    //     <div>
-    //       <label htmlFor="email">email</label>
-    //       <input
-    //         id="email"
-    //         value={email}
-    //         onChange={(e) => setEmail(e.target.value)}
-    //       ></input>
-    //     </div>
-    //     <div>
-    //       <label htmlFor="password">password</label>
-    //       <input
-    //         type="text"
-    //         id="password"
-    //         value={password}
-    //         onChange={(e) => setPassword(e.target.value)}
-    //       />
-    //     </div>
-    //     <button type="submit">enviar</button>
-    //   </form>
-    // </div>
+
   );
 };
