@@ -1,10 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+
+
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { App } from './App';
 import { Login } from './formalariosRegistros/Login';
 import { SingUp } from './formalariosRegistros/SingUp';
-
 import { Verificar } from './formalariosRegistros/Verificar';
 import { ProviderSIngUp } from './Contextos/ProviderSIngUp';
 import { ProviderTareas } from './Contextos/ProviderTareas';
@@ -24,7 +26,7 @@ root.render(
             <Login />
           </ProviderSIngUp>
         } />
-        <Route path="/signUp" element={<SingUp />} />
+        <Route path="/singUp" element={<SingUp />} />
         <Route path="/app" element={
           <ProviderSIngUp>
             <Verificar />

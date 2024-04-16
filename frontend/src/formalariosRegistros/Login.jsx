@@ -115,6 +115,5 @@ export const Login = () => {
     <span>{error} </span>
     </div>
   </div>
-
   );
 };
