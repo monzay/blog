@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { obtenerCredencialesUse } from "../funciones globales/obtenenerDatosDelLocalStorage";
 import { contextoEstadoEliminarTarea } from "../Contextos/EstadoEliminarTarea";
 import iconAñadir from "../../public/Icons/añadir.svg";
+import { RUTA_BACKEND } from "../../configuracion";
 
 export const AñadirTarea = () => {
   const [tarea, setTarea] = useState("");
@@ -41,7 +42,7 @@ export const AñadirTarea = () => {
           tarea,
           tiempo,
         };
-        const response = await fetch("http://localhost:3000/app/enviar", {
+        const response = await fetch(`${RUTA_BACKEND}/app/enviar`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(dataTarea),
