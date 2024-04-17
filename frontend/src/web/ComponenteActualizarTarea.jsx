@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { contextoTareas } from "../Contextos/ProviderTareas";
 import { obtenerCredencialesUse } from "../funciones globales/obtenenerDatosDelLocalStorage";
 import { contextoEstadoEliminarTarea } from "../Contextos/EstadoEliminarTarea";
+import { RUTA_BACKEND } from "../../configuracion";
 
 
 
@@ -27,7 +28,7 @@ export const ComponenteActualizarTarea = ({id,setMostrarModelActualizar}) => {
       tiempo: newTiempo ? newTiempo : oldTarea.tiempo,
     };
     try {
-      const response = await fetch("http://localhost:3000/app/actualizar", {
+      const response = await fetch(`${RUTA_BACKEND}/app/actualizar`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

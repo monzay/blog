@@ -6,6 +6,7 @@ import { contextoPasarIdTareaCompletada } from "../Contextos/ProviderPasarIdTare
 import { MostrarTiempoRestante } from "./seccion mostrar tarea que llegaron a su tiempo/MostrarTiempoRestante";
 import { FormElegirTiempo } from "./seccion mostrar tarea que llegaron a su tiempo/FormElegirTiempo";
 import { contextoEjecutarRetomarTiempo } from "../Contextos/ProviderEjecutarRetomarTiempo";
+import { RUTA_BACKEND } from "../../configuracion";
 export const ModelHoraDeLaTarea = ({ data}) => {
   //[data] : retorna el id de la tarea que llego su tiempo para mostrarse
 
@@ -64,7 +65,7 @@ export const ModelHoraDeLaTarea = ({ data}) => {
         tareaNoHecha: 0,
       };
 
-      const response = await fetch("http://localhost:3000/app/seguimiento", {
+      const response = await fetch(`${RUTA_BACKEND}/app/seguimiento`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(datoDeLaTarea),

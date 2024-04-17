@@ -5,6 +5,7 @@ import { contextoEstadoEliminarTarea } from "../Contextos/EstadoEliminarTarea";
 import { fondoDePantalla } from "../diseños de pago/FondoDePantalla";
 import iconEliminar from "../../public/Icons/eliminar.svg";
 import iconEditar from "../../public/Icons/editar.svg";
+import { RUTA_BACKEND } from "../../configuracion";
 
 export const Tarea = ({
   tarea,
@@ -43,7 +44,7 @@ export const Tarea = ({
         tareaID: tareaID,
       };
       // peticion al servidor para que elimine la tarea
-      const response = await fetch("http://localhost:3000/app/eliminar", {
+      const response = await fetch(`${RUTA_BACKEND}/app/eliminar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(tareaUser),
