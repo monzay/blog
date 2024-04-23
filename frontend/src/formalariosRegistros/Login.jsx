@@ -32,49 +32,52 @@ export const Login = () => {
 
   const fromLogin = async (e) => {
     e.preventDefault();
+    function validarEmail(email) {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(email);
+  }
+  if (!email.trim() &&  !password.trim()) {
+    setError("Por favor completa todos los campos.");
+    return;
+  }
+ else if (!validarEmail(email)) {
+      console.log("El correo electrónico es válido.");
+  }else{
     try {
-      function validarEmail(email) {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
-    }
-    if (!email.trim() &&  !password.trim()) {
-      setError("Por favor completa todos los campos.");
-      return;
-    }
-   else if (!validarEmail(email)) {
-        console.log("El correo electrónico es válido.");
-    }else{
-        const credencialesUser = {
-          email,
-          password,
-        };
-        const response = await fetch(`${RUTA_BACKEND}/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(credencialesUser),
-        });
+      const credencialesUser = {
+        email,
+        password,
+      };
+      const response = await fetch(`${RUTA_BACKEND}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credencialesUser),
+      });
 
-        if (!response.ok) {
-          console.log("Error al recibir los datos");
-        } else {
-          const data = await response.json();
-          if(response.ok){
-            if(data.mensaje === "no se encontro la cuenta") {
-              setError(data.mensaje)
-            }else{
-              localStorage.setItem("credenciales",JSON.stringify(data.credenciales));
-              setAccesoApp(data.token)
-              navegate("/app")
-            }
+      if (!response.ok) {
+        console.log("Error al recibir los datos");
+      } else {
+        const data = await response.json();
+        if(response.ok){
+          if(data.mensaje === "no se encontro la cuenta") {
+            setError(data.mensaje)
           }else{
+            localStorage.setItem("credenciales",JSON.stringify(data.credenciales));
+            setAccesoApp(data.token)
+            navegate("/app")
           }
-      }
+        }else{
+        }
     }
     } catch (error) {
-      console.error(error);
+      console.log(error)
     }
+
+
+  }
+
   };
 
   return (
