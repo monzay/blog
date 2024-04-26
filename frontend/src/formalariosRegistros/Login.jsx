@@ -43,6 +43,7 @@ export const Login = () => {
  else if (!validarEmail(email)) {
       console.log("El correo electrónico es válido.");
   }else{
+
     try {
       const credencialesUser = {
         email,

@@ -68,7 +68,7 @@ export const ProviderEjecutarRetomarTiempo = ({children}) => {
               mandarIdParaNoMastrarLasTareasCompletadas();
             }
           }
-        }, 60000);
+        }, 1000);
       }
       function retomamosElTiempo() {
         const tiempo = JSON.parse(localStorage.getItem("tiempoRestanTarea"));

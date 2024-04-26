@@ -6,6 +6,8 @@ import { fondoDePantalla } from "../diseños de pago/FondoDePantalla";
 import iconEliminar from "../../public/Icons/eliminar.svg";
 import iconEditar from "../../public/Icons/editar.svg";
 import { RUTA_BACKEND } from "../../configuracion";
+import { comenzarTarea } from "../acciones/ComenzarTarea";
+import { contextoTareas } from "../Contextos/ProviderTareas";
 
 export const Tarea = ({
   tarea,
@@ -13,21 +15,22 @@ export const Tarea = ({
   setArrayConTodasLasTareasQueYaPasaronSuTiempo,
   setTiempoFondoDePantalla,
 }) => {
+
   // [tarea]: nos retorna todas las tareas
 
+  // CONTEXTOS 
   const { eliminoUnaTareas, setEliminoUnaTarea } = useContext(
     contextoEstadoEliminarTarea
   );
+  const {tareaUser} = useContext(contextoTareas)
+
+  // ESTADOS 
   const [tareaId, setTareaId] = useState(0);
   const [mostrarModelActualizar, setMostrarModelActualizar] = useState(false);
   const [currentHour, setCurrentHour] = useState(new Date());
   const [tiempoRestante, setTiempoRestante] = useState("");
 
-
-
-
-
-
+  // FUNCIONES 
   //------------------------------------------------------------------------//
   // vinculamos los puntos con las tareas
   function VincularLosPuntos() {
@@ -79,10 +82,13 @@ export const Tarea = ({
   }
   // se va a ejecutar una sola vez  para que se muestren todas  las tarea que se tienen que hacer
   // hasta que se ejecuta la misma funcion pero cada 1min
+
   useEffect(() => {
     verSiLaTareaLlegoASuHoraDeDestino();
   }, []);
+
   //------------------------------------------------------------------------//
+
   function calcularCuantoTiempoRestanteLeQueda(hora) {
     if (hora) {
       // hora actual
@@ -116,8 +122,8 @@ export const Tarea = ({
     const dataLocal = JSON.parse(localStorage.getItem("IdTareasHechas"));
     if (dataLocal) {
       if (dataLocal[0].dia !== dia) {
-        console.log("hola como estas");
         localStorage.removeItem("IdTareasHechas");
+        localStorage.setItem("tiemposTareas",JSON.stringify([]))
       }
       // mesansaje : cuando se elimine el almacenamiento se va tener que resfrescar para que se vuelva a crear el almacenamiento por que si no donde se van mandar los ids
     }
@@ -128,19 +134,15 @@ export const Tarea = ({
     setTiempoRestante(calcularCuantoTiempoRestanteLeQueda(tarea.tiempo));
     //----------------------------------------------------------------------//
     const interval = setInterval(() => {
-      //----------------------------------------------------------------------//
       verSiLaTareaLlegoASuHoraDeDestino();
-      //----------------------------------------------------------------------//
-      const tiempoDeLasTarea = calcularCuantoTiempoRestanteLeQueda(tarea.tiempo);
+      const tiempoDeLasTarea = calcularCuantoTiempoRestanteLeQueda( tarea.tiempo );
       setTiempoRestante(tiempoDeLasTarea);
-      //----------------------------------------------------------------------//
       // fondo
       const tiempoEnTiempoReal = fondoDePantalla();
       setTiempoFondoDePantalla(tiempoEnTiempoReal);
-
       // FD : CUANDO DIA CAMBIE Y NO SE EL MISMO DIA SE VA A ELIMINAR EL ALAMACENAMIENTO
       eliminarTodosLosIdsAlmacenadosCuandonSeaOtroDia();
-    }, 60000);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [tarea.tiempo]);
@@ -179,7 +181,7 @@ export const Tarea = ({
             <div className="tarea-contenedor-btns">
               <button
                 onClick={() => {
-                  eliminarTarea(tarea.tareaID)
+                  eliminarTarea(tarea.tareaID);
                   setTareaId(tarea.tareaID);
                 }}
                 className="tarea-btn"
@@ -194,6 +196,12 @@ export const Tarea = ({
                 className="tarea-btn"
               >
                 <img className="icon-tarea" src={iconEditar} alt="" />
+              </button>
+              <button className="tarea-btn" onClick={() => {
+                comenzarTarea(tarea.tareaID,tareaUser,setArrayConTodasLasTareasQueYaPasaronSuTiempo)
+                setClickAdelantar(true)
+              } }>
+                a
               </button>
             </div>
           </div>

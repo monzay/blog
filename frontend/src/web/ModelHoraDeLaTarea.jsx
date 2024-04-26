@@ -7,19 +7,28 @@ import { MostrarTiempoRestante } from "./seccion mostrar tarea que llegaron a su
 import { FormElegirTiempo } from "./seccion mostrar tarea que llegaron a su tiempo/FormElegirTiempo";
 import { contextoEjecutarRetomarTiempo } from "../Contextos/ProviderEjecutarRetomarTiempo";
 import { RUTA_BACKEND } from "../../configuracion";
-export const ModelHoraDeLaTarea = ({ data}) => {
+import { unmountComponentAtNode } from "react-dom";
+export const ModelHoraDeLaTarea = ({ data }) => {
   //[data] : retorna el id de la tarea que llego su tiempo para mostrarse
 
   const { tareaUser } = useContext(contextoTareas);
   const { setIdTareaHecha } = useContext(contextoPasarIdTareaCompletada);
-  const {setEnvioElPunto,envioElPunto,tiempoRestante,setTiempoRestante,setId,id,setIndentificador,setTodosLosIdsParaNoMostrar} =   useContext(contextoEjecutarRetomarTiempo)
-  
+  const {
+    setEnvioElPunto,
+    envioElPunto,
+    tiempoRestante,
+    setTiempoRestante,
+    setId,
+    id,
+    setIndentificador,
+    setTodosLosIdsParaNoMostrar,
+  } = useContext(contextoEjecutarRetomarTiempo);
+
   const [dataTarea, setDataTarea] = useState({});
   const [mostrarElegirTiempo, setMostrarElegirTiempo] = useState(false);
   const [tiempo, setTiempo] = useState("");
   const [error, setError] = useState("");
 
-  //------------------------------------------------------------------------//
   //------------------------------------------------------------------------//
 
   // EFFECT QUE VE SI LOS EL REPO SE CREO  Y SINO LO CREA
@@ -42,8 +51,6 @@ export const ModelHoraDeLaTarea = ({ data}) => {
   }
   guardarTiempoCuadoElUsuarioCierreLaPagina();
   //------------------------------------------------------------------------//
-  //------------------------------------------------------------------------//
-
   // SIRVE LA ENTRELAZAR LOS DATOS
 
   useEffect(() => {
@@ -52,15 +59,13 @@ export const ModelHoraDeLaTarea = ({ data}) => {
   }, []);
 
   //------------------------------------------------------------------------//
-  //------------------------------------------------------------------------//
-
   //SUB FUNCION
   // FUNCION PARA MANDAR LOS DATOS A LA BASE DE DATOS
-  
+
   async function mandarDarPuntoDeLaTareaCompletada() {
     try {
       const datoDeLaTarea = {
-        tareaID:dataTarea.tareaID,
+        tareaID: dataTarea.tareaID,
         tareaHecha: 1,
         tareaNoHecha: 0,
       };
@@ -80,7 +85,7 @@ export const ModelHoraDeLaTarea = ({ data}) => {
   // SUB FUNCION
   function mandarIdParaNoMastrarLasTareasCompletadas() {
     const dataLocal = JSON.parse(localStorage.getItem("IdTareasHechas"));
-    const id = data ;
+    const id = data;
     setTodosLosIdsParaNoMostrar((prev) => [...prev, id]);
     const newData = {
       ...dataLocal[0],
@@ -100,37 +105,41 @@ export const ModelHoraDeLaTarea = ({ data}) => {
   }
   // SUB FUNCION
   function restarTiempo(horasRestantes, minutosRentes) {
-
-    const interval = setInterval(() => {
-      if (minutosRentes !== 0) {
-        minutosRentes -= 1;
-        setTiempoRestante((prev) => ({
-          ...prev,
-          horas: horasRestantes,
-          minutos: minutosRentes,
-        }));
-      } else {
-        if (horasRestantes !== 0) {
-          horasRestantes -= 1;
-          minutosRentes = 59;
+    if (stop) {
+      const interval = setInterval(() => {
+        if (minutosRentes !== 0) {
+          minutosRentes -= 1;
           setTiempoRestante((prev) => ({
             ...prev,
             horas: horasRestantes,
             minutos: minutosRentes,
           }));
         } else {
-          clearInterval(interval);
-          mandarDarPuntoDeLaTareaCompletada();
-          mandarIdParaNoMastrarLasTareasCompletadas();
+          if (horasRestantes !== 0) {
+            horasRestantes -= 1;
+            minutosRentes = 59;
+            setTiempoRestante((prev) => ({
+              ...prev,
+              horas: horasRestantes,
+              minutos: minutosRentes,
+            }));
+          } else {
+            clearInterval(interval);
+            mandarDarPuntoDeLaTareaCompletada();
+            mandarIdParaNoMastrarLasTareasCompletadas();
+          }
         }
-      }
-    }, 1000);
+      }, 1000);
+    }
   }
   // FRUNCION DECLARACION DEL TIEMPO
   function calcularTiempoQueElUsuarioDeclaro() {
     setIndentificador({ tiempoDeclado: true, retomarTiempo: false });
+
     let horasRestantes = tiempo.indexOf(":") === -1 ? 0 : tiempo.split(":")[0];
-    let minutosRentes = tiempo.indexOf(":") === -1 ? tiempo : tiempo.split(":")[1];
+    let minutosRentes =
+      tiempo.indexOf(":") === -1 ? tiempo : tiempo.split(":")[1];
+
     setTiempoRestante({
       horas: horasRestantes,
       minutos: minutosRentes,
@@ -145,26 +154,34 @@ export const ModelHoraDeLaTarea = ({ data}) => {
   function clickEjecucion(e) {
     e.preventDefault();
 
-    const { horas, minutos } = JSON.parse(
-      localStorage.getItem("tiempoRestanTarea")
-    );
-    // VALIDACION PARA QUE SE PA QUE ESTA PASANDO EL USUARIO
+    if (stop) {
+      const { horas, minutos } = JSON.parse(
+        localStorage.getItem("tiempoRestanTarea")
+      );
+      // VALIDACION PARA QUE SE PA QUE ESTA PASANDO EL USUARIO
 
-    if (horas !== 0 && minutos !== 0) {
-      setError("hay un tiempo que esta corriendo espara capo");
-      return;
-    } else if (!tiempo) {
-      setError("dale pelotudo pone el tiempo");
-      return;
-    } else {
-      calcularTiempoQueElUsuarioDeclaro();
+      if (horas !== 0 && minutos !== 0) {
+        setError("hay un tiempo que esta corriendo espara capo");
+        return;
+      } else if (!tiempo) {
+        setError("dale pelotudo pone el tiempo");
+        return;
+      } else {
+        calcularTiempoQueElUsuarioDeclaro();
+      }
+      
+      setMostrarElegirTiempo(false);
+      setId(data);
+      
+    }else{
+      localStorage.setItem("tiempoRestanTarea",JSON.stringify(tiempoRestante))
+      
     }
-    setMostrarElegirTiempo(false);
-    setId(data);
+    setStop(!stop);
   }
-  
+
   //------------------------------------------------------------------------//
-  // FUNCIONES PARA ARREGLAR EN UN FUTURO 
+  // FUNCIONES PARA ARREGLAR EN UN FUTURO
   useEffect(() => {
     function calcularElTiempoRestanteCuandoElUsuarioNoEstaEnLaPagina() {
       const dataLocal = JSON.parse(localStorage.getItem("tiempoRestanTarea"));
@@ -210,9 +227,11 @@ export const ModelHoraDeLaTarea = ({ data}) => {
     }
   }, []);
 
+  const [stop, setStop] = useState(true);
+
   return (
     <li className="contenedor-mostrar-hora-de-hacerla">
-      <span>{dataTarea.tarea } </span>
+      <span>{dataTarea.tarea} </span>
       {id === data && <MostrarTiempoRestante />}
       {mostrarElegirTiempo && (
         <FormElegirTiempo
@@ -231,7 +250,15 @@ export const ModelHoraDeLaTarea = ({ data}) => {
               setIdTareaHecha(data);
             }}
           >
-            comenzar
+            play
+          </button>
+          <button
+            className="btn-componente-mostrar-hora-de-la-tarea"
+            onClick={() => {
+              funcion_stop();
+            }}
+          >
+            stop
           </button>
         </div>
       )}
