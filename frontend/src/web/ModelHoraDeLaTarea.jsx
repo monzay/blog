@@ -8,6 +8,8 @@ import { FormElegirTiempo } from "./seccion mostrar tarea que llegaron a su tiem
 import { contextoEjecutarRetomarTiempo } from "../Contextos/ProviderEjecutarRetomarTiempo";
 import { RUTA_BACKEND } from "../../configuracion";
 import { unmountComponentAtNode } from "react-dom";
+
+import { guardarTiempoCuadoElUsuarioCierreLaPagina } from "../funciones globales/guardarTiempoCuandoElUsuarioSalgaDeLaPagina";
 export const ModelHoraDeLaTarea = ({ data }) => {
   //[data] : retorna el id de la tarea que llego su tiempo para mostrarse
 
@@ -41,15 +43,11 @@ export const ModelHoraDeLaTarea = ({ data }) => {
       );
     }
   }, []);
+
   //------------------------------------------------------------------------//
-  // FUNCION  QUE GUARDA EL TIEMPO QUE TRANSCURRIO Y LO GUARDA  AL SALIR DE LA PAGINA O REFRESCAR
-  function guardarTiempoCuadoElUsuarioCierreLaPagina() {
-    window.addEventListener("beforeunload", function (e) {
-      const ultimaHora = tiempoRestante;
-      localStorage.setItem("tiempoRestanTarea", JSON.stringify(ultimaHora));
-    });
-  }
-  guardarTiempoCuadoElUsuarioCierreLaPagina();
+
+  guardarTiempoCuadoElUsuarioCierreLaPagina(tiempoRestante);
+  
   //------------------------------------------------------------------------//
   // SIRVE LA ENTRELAZAR LOS DATOS
 
@@ -104,41 +102,98 @@ export const ModelHoraDeLaTarea = ({ data }) => {
     return stringTiempo;
   }
   // SUB FUNCION
-  function restarTiempo(horasRestantes, minutosRentes) {
-    if (stop) {
-      const interval = setInterval(() => {
-        if (minutosRentes !== 0) {
-          minutosRentes -= 1;
-          setTiempoRestante((prev) => ({
-            ...prev,
-            horas: horasRestantes,
-            minutos: minutosRentes,
-          }));
-        } else {
-          if (horasRestantes !== 0) {
-            horasRestantes -= 1;
-            minutosRentes = 59;
+
+  //SABES QUE VAMOS HACER ES SEPARAR ESTA FUNCION PARA QUE LA PUEDA USAR DETRO DE UN USEEFFECT Y YA VEO COMO HAGO CON EL TEMA DEL ID
+  //
+
+
+  const [controladores,setControladores] = useState(false)
+
+
+  // ME PARECE QUE ES ERROR ES POR QUE NO ESTOY  ELIMINADO EL SETNTERVAL 
+
+  useEffect(() => {
+
+    if(controladores){
+      function restarTiempo(horasRestantes, minutosRentes) {
+        
+        const   interval = setInterval(() => {
+          if (minutosRentes !== 0) {
+            minutosRentes -= 1;
             setTiempoRestante((prev) => ({
               ...prev,
               horas: horasRestantes,
               minutos: minutosRentes,
             }));
           } else {
-            clearInterval(interval);
-            mandarDarPuntoDeLaTareaCompletada();
-            mandarIdParaNoMastrarLasTareasCompletadas();
+            if (horasRestantes !== 0) {
+              horasRestantes -= 1;
+              minutosRentes = 59;
+              setTiempoRestante((prev) => ({
+                ...prev,
+                horas: horasRestantes,
+                minutos: minutosRentes,
+              }));
+            } else {
+              clearInterval(interval);
+              mandarDarPuntoDeLaTareaCompletada();
+              mandarIdParaNoMastrarLasTareasCompletadas();
+            }
           }
-        }
-      }, 1000);
+        }, 1000);
+
     }
-  }
+    let horasRestantes = tiempo.indexOf(":") === -1 ? 0 : tiempo.split(":")[0];
+    let minutosRentes = tiempo.indexOf(":") === -1 ? tiempo : tiempo.split(":")[1];
+
+    restarTiempo(horasRestantes,minutosRentes)
+
+    console.log("hola  como estas linda")
+    }
+
+  }, [controladores]);
+
+
+  useEffect(() => {
+    console.log(controladores)
+  }, [controladores]);
+
+
+
+
+  // function restarTiempo(horasRestantes, minutosRentes) {
+
+  //     const interval = setInterval(() => {
+  //       if (minutosRentes !== 0) {
+  //         minutosRentes -= 1;
+  //         setTiempoRestante((prev) => ({
+  //           ...prev,
+  //           horas: horasRestantes,
+  //           minutos: minutosRentes,
+  //         }));
+  //       } else {
+  //         if (horasRestantes !== 0) {
+  //           horasRestantes -= 1;
+  //           minutosRentes = 59;
+  //           setTiempoRestante((prev) => ({
+  //             ...prev,
+  //             horas: horasRestantes,
+  //             minutos: minutosRentes,
+  //           }));
+  //         } else {
+  //           clearInterval(interval);
+  //           mandarDarPuntoDeLaTareaCompletada();
+  //           mandarIdParaNoMastrarLasTareasCompletadas();
+  //         }
+  //       }
+  //     }, 1000);
+  // }
   // FRUNCION DECLARACION DEL TIEMPO
   function calcularTiempoQueElUsuarioDeclaro() {
     setIndentificador({ tiempoDeclado: true, retomarTiempo: false });
 
     let horasRestantes = tiempo.indexOf(":") === -1 ? 0 : tiempo.split(":")[0];
-    let minutosRentes =
-      tiempo.indexOf(":") === -1 ? tiempo : tiempo.split(":")[1];
+    let minutosRentes = tiempo.indexOf(":") === -1 ? tiempo : tiempo.split(":")[1];
 
     setTiempoRestante({
       horas: horasRestantes,
@@ -146,20 +201,20 @@ export const ModelHoraDeLaTarea = ({ data }) => {
       id: data,
       horaEnLaQueComenzo: timepoActual(),
     });
+    setControladores(true)
 
-    restarTiempo(horasRestantes, minutosRentes);
+    // restarTiempo(horasRestantes, minutosRentes);
   }
 
   // CLICK CUANDO SE DECLARA EL TIEMPO
+  
   function clickEjecucion(e) {
     e.preventDefault();
 
-    if (stop) {
       const { horas, minutos } = JSON.parse(
         localStorage.getItem("tiempoRestanTarea")
       );
       // VALIDACION PARA QUE SE PA QUE ESTA PASANDO EL USUARIO
-
       if (horas !== 0 && minutos !== 0) {
         setError("hay un tiempo que esta corriendo espara capo");
         return;
@@ -172,12 +227,6 @@ export const ModelHoraDeLaTarea = ({ data }) => {
       
       setMostrarElegirTiempo(false);
       setId(data);
-      
-    }else{
-      localStorage.setItem("tiempoRestanTarea",JSON.stringify(tiempoRestante))
-      
-    }
-    setStop(!stop);
   }
 
   //------------------------------------------------------------------------//
@@ -227,7 +276,7 @@ export const ModelHoraDeLaTarea = ({ data }) => {
     }
   }, []);
 
-  const [stop, setStop] = useState(true);
+  
 
   return (
     <li className="contenedor-mostrar-hora-de-hacerla">
@@ -254,8 +303,8 @@ export const ModelHoraDeLaTarea = ({ data }) => {
           </button>
           <button
             className="btn-componente-mostrar-hora-de-la-tarea"
-            onClick={() => {
-              funcion_stop();
+            onClick={() => { 
+              setControladores(false)
             }}
           >
             stop

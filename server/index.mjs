@@ -14,13 +14,16 @@ import 'dotenv/config'
 
 
 
-const CORS_FRONTEND =  process.env.CORS_FRONTEND || "http://localhost:5173"
+const CORS_FRONTEND =   "http://localhost:5173" ||  process.env.CORS_FRONTEND 
 const PORT =  process.env.PORT || 3000 
 
 
 
 import url from "url"
 import path from "path";
+
+console.log(PORT)
+console.log(CORS_FRONTEND)
 
 
 function rutaDBsqlite (){
