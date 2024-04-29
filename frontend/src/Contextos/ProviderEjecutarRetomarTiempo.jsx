@@ -68,12 +68,15 @@ export const ProviderEjecutarRetomarTiempo = ({children}) => {
               mandarIdParaNoMastrarLasTareasCompletadas();
             }
           }
-        }, 60000);
+        }, 1000);
       }
       function retomamosElTiempo() {
         const tiempo = JSON.parse(localStorage.getItem("tiempoRestanTarea"));
+
         if(tiempo){
-          setTiempoRestante(tiempo)          
+
+          setTiempoRestante(tiempo)
+
           const Thoras = tiempo.horas
           const Tminutos = tiempo.minutos
           const Tid = tiempo.id
@@ -85,11 +88,15 @@ export const ProviderEjecutarRetomarTiempo = ({children}) => {
             let minutosRentes = Tminutos;
             restarTiempo(horaRetantes,minutosRentes,Tid,ThoraEnLaQueComenzo);
           }
+
         }
       }
       useEffect(() => {
         retomamosElTiempo()
       }, [])
+
+
+      
 
 
   return (

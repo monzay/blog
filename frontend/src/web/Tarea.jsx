@@ -6,6 +6,10 @@ import { fondoDePantalla } from "../diseños de pago/FondoDePantalla";
 import iconEliminar from "../../public/Icons/eliminar.svg";
 import iconEditar from "../../public/Icons/editar.svg";
 import { RUTA_BACKEND } from "../../configuracion";
+import { comenzarTarea } from "../acciones/comenzarTarea";
+import { contextoTareas } from "../Contextos/ProviderTareas";
+import { eliminar_id_tarea_adelantada } from "../acciones/eliminarIdTareaAdelantada";
+
 
 export const Tarea = ({
   tarea,
@@ -18,6 +22,8 @@ export const Tarea = ({
   const { eliminoUnaTareas, setEliminoUnaTarea } = useContext(
     contextoEstadoEliminarTarea
   );
+
+  const {tareaUser} = useContext(contextoTareas)
   const [tareaId, setTareaId] = useState(0);
   const [mostrarModelActualizar, setMostrarModelActualizar] = useState(false);
   const [currentHour, setCurrentHour] = useState(new Date());
@@ -147,6 +153,10 @@ export const Tarea = ({
 
   //------------------------------------------------------------------------//
 
+  useEffect(() => {
+    eliminar_id_tarea_adelantada(tareaId)
+   }, [tareaId])
+
   return (
     <div className="tarea" key={tarea.tareaID}>
       {tarea.tareaID === tareaId && mostrarModelActualizar ? (
@@ -194,6 +204,11 @@ export const Tarea = ({
                 className="tarea-btn"
               >
                 <img className="icon-tarea" src={iconEditar} alt="" />
+              </button>
+              <button className="tarea-btn" onClick={() => {
+                comenzarTarea(tarea.tareaID,tareaUser,setArrayConTodasLasTareasQueYaPasaronSuTiempo)
+              } }>
+                a
               </button>
             </div>
           </div>

@@ -61,6 +61,17 @@ export const App = () => {
     obtenerLosIdTareaQueYaFueronCompletadaDuranteDia()
   }, []);
 
+
+
+
+  useEffect(() => {
+    if (!localStorage.getItem("tiemposTareas")) {
+      localStorage.setItem("tiemposTareas", JSON.stringify([]));
+    }
+
+    
+  }, []);
+
   //---------------------------------------------------------------------------------------------------//
   //---------------------------------------------------------------------------------------------------//
 
@@ -90,12 +101,26 @@ export const App = () => {
     setIdsTareaNoPletadas(verSiLaTareaNoSeTieneQueMostrar());
   }, [arrayConTodasLasTareasQueYaPasaronSuTiempo, todosLosIdsParaNoMostrar]);
 
+  // CONCATEMOS EL ARRAY CON LOS IDS CON LOS IDS DE  TAREAADELANTAR PARA MOSTRAR LAS TAREAS QUE SE TIENEN QUE HACER AUN  
+
+  useEffect(() => {
+    const array1 = JSON.parse(localStorage.getItem("tiemposTareas"))
+    if(array1.length !== 0){
+      setTimeout(() => {
+         setArrayConTodasLasTareasQueYaPasaronSuTiempo(prev=> [...prev,array1[0].id])
+      }, 1000);
+    }
+  }, [])
+
+
+
   //---------------------------------------------------------------------------------------------------//
   //---------------------------------------------------------------------------------------------------//
 
   useEffect(() => {
     const tareasUsuarioEnCulmnas = calculateTaskDistribution(tareaUser)
     setDistribucionTareas(tareasUsuarioEnCulmnas);
+
   }, [tareaUser]);
   //---------------------------------------------------------------------------------------------------//
   //---------------------------------------------------------------------------------------------------//
@@ -136,7 +161,12 @@ export const App = () => {
       setTareaTops(tareasTops);
     }
     s();
+    
+
   }, [eliminoUnaTareas,envioElPunto,añadirTarea,actualizoUnaTarea]);
+
+
+  
 
 
   //---------------------------------------------------------------------------------------------------//
@@ -150,6 +180,7 @@ export const App = () => {
             <HederOccion occion="perfil" />
             <HederOccion occion="pago" />
             <HederOccion occion="ajustes" />
+            <HederOccion occion="estadisticas" />
           </div>
         </section>
       </header>
