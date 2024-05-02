@@ -1,4 +1,5 @@
-export function comenzarTarea(id,tareas,setArrayConTodasLasTareasQueYaPasaronSuTiempo) {
+
+export function comenzarTarea(id,tareas,setArrayConTodasLasTareasQueYaPasaronSuTiempo,arrayConTodasLasTareasQueYaPasaronSuTiempo) {
 
   const tareaSelecionada = tareas.find((tarea) => tarea.tareaID === id); // BUSCAR LA TAREA 
 
@@ -14,19 +15,14 @@ export function comenzarTarea(id,tareas,setArrayConTodasLasTareasQueYaPasaronSuT
     btnStop:false 
   };
 
-  if (localStorage.getItem("tiemposTareas")) {
-    if (data.length === 0) {
-      // SI NO ARRAY ESTA VACIO AGREGAMOS LA TAREA SIN ASCO 
-      localStorage.setItem("tiemposTareas", JSON.stringify([...data,tarea]));
-      setArrayConTodasLasTareasQueYaPasaronSuTiempo((prev) => [...prev, tareaSelecionada.tareaID]);
-    } else {
-      // EN CASO QUE TENG ELEMENTOS VEMOS QUE NOSE REPITAN 
-      data.forEach((t) => {
-        if (t.tareaID !== id) {
-          localStorage.setItem("tiemposTareas",JSON.stringify([...data, tarea]));
-          setArrayConTodasLasTareasQueYaPasaronSuTiempo((prev) => [...prev, tareaSelecionada.tareaID]);
-        }
-      });
-    }
+    const ids_no_mostrar = JSON.parse(localStorage.getItem("IdTareasHechas"))[0].ids
+    const ids_mostrar =  JSON.parse(localStorage.getItem("tareaMostrar"))
+    
+  if (data){
+    //( EL ID NO PUEDE SER EL MISMO) Y (NO DEBE ESTAR DENTRO DEL LOS ID QUE YA NOSE TIENENQ QUE MOSTRAR)
+    if(data.id !== id && !ids_no_mostrar.includes(id) && !ids_mostrar.includes(id)){
+        localStorage.setItem("tiemposTareas",JSON.stringify(tarea));
+        setArrayConTodasLasTareasQueYaPasaronSuTiempo((prev) => [...prev, tareaSelecionada.tareaID]);
+      }
   }
 }

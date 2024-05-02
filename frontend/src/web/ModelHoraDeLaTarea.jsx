@@ -32,14 +32,29 @@ export const ModelHoraDeLaTarea = ({ data }) => {
 
   //------------------------------------------------------------------------//
 
+
+  useEffect(() => {
+    // VEMOS  SI HAY CONTROLADORES LOCALES  DE (ADELANTAR TAREA)
+    const controladoresLocales = JSON.parse(
+      localStorage.getItem("tiemposTareas")
+    );
+    if (controladoresLocales) {
+    }
+  }, []);
+
+
+
   // EFFECT QUE VE SI LOS EL REPO SE CREO  Y SINO LO CREA
   useEffect(() => {
-    const tiempoLocal = localStorage.getItem("tiempoRestanTarea");
+    const tiempoLocal = localStorage.getItem("tiempoRestanTarea")
     if (!tiempoLocal) {
-      localStorage.setItem(
-        "tiempoRestanTarea",
-        JSON.stringify({ horas: 0, minutos: 0, id: 0, horaEnLaQueComenzo: "" })
-      );
+      localStorage.setItem(  "tiempoRestanTarea", JSON.stringify(
+        {
+         horas: 0,
+          minutos: 0,
+           id: 0,
+            horaEnLaQueComenzo: "" 
+          }) );
     }
   }, []);
   //------------------------------------------------------------------------//
@@ -50,7 +65,7 @@ export const ModelHoraDeLaTarea = ({ data }) => {
       localStorage.setItem("tiempoRestanTarea", JSON.stringify(ultimaHora));
     });
   }
-  guardarTiempoCuadoElUsuarioCierreLaPagina();
+  guardarTiempoCuadoElUsuarioCierreLaPagina()
   //------------------------------------------------------------------------//
   // SIRVE LA ENTRELAZAR LOS DATOS
 
@@ -146,8 +161,7 @@ export const ModelHoraDeLaTarea = ({ data }) => {
     setIndentificador({ tiempoDeclado: true, retomarTiempo: false });
 
     let horasRestantes = tiempo.indexOf(":") === -1 ? 0 : tiempo.split(":")[0];
-    let minutosRentes =
-      tiempo.indexOf(":") === -1 ? tiempo : tiempo.split(":")[1];
+    let minutosRentes = tiempo.indexOf(":") === -1 ? tiempo : tiempo.split(":")[1];
 
     setTiempoRestante({
       horas: horasRestantes,
@@ -159,11 +173,12 @@ export const ModelHoraDeLaTarea = ({ data }) => {
     // restarTiempo(horasRestantes, minutosRentes);
   }
   // CLICK CUANDO SE DECLARA EL TIEMPO
-  function clickEjecucion(e) {
+
+
+  function click_ejecucion(e) {
+
     e.preventDefault();
-    const { horas, minutos } = JSON.parse(
-      localStorage.getItem("tiempoRestanTarea")
-    );
+    const { horas, minutos } = JSON.parse( localStorage.getItem("tiempoRestanTarea"));
     // VALIDACION PARA QUE SE PA QUE ESTA PASANDO EL USUARIO
 
     if (horas !== 0 && minutos !== 0) {
@@ -178,16 +193,7 @@ export const ModelHoraDeLaTarea = ({ data }) => {
     setActivo(true);
     setMostrarElegirTiempo(false);
     setId(data);
-    setControladores(
-      {
-        id:data,
-        from: false,
-        btns: true,
-        iniciar: false,
-        btnPlay: false,
-        btnStop: true,
-      }
-    );
+    controladores_para_mostrar_los_btns(false,true,false,false,true)
   }
 
   //------------------------------------------------------------------------//
@@ -195,9 +201,10 @@ export const ModelHoraDeLaTarea = ({ data }) => {
   //------------------------------------------------------------------------//
 
   const [intervalRetarTiempo, setIntervalRestarTiempo] = useState(null);
-  const [activo, setActivo] = useState(false);
-    const [controladores, setControladores] = useState({
-    id:data,
+
+  
+  const [controladores, setControladores] = useState({
+    id:0,
     from: false,
     btns: false,
     iniciar: true,
@@ -205,9 +212,40 @@ export const ModelHoraDeLaTarea = ({ data }) => {
     btnStop: false,
   });
 
+  const [activo,setActivo] = useState(false)
+  
+
+
 
 
   useEffect(() => {
+    // OBETEMOS LOS CONTROLADORES LOCAL SI EXITEN PARA MOSTRAR LOS BTNS CORRESPONDIENTES 
+    const controladores_locales = JSON.parse(localStorage.getItem("controladores"))
+    // SI EXITE SE EJECUTA  Y SI NO FUE (YA QUE SI EL USUARIO ELIMINA DATOS DE LOCALSTORAGE)
+    if(controladores_locales){
+      // CONDICION PARA SOLO QUE OBTENGA CON CONTROLADORES DE UNA TAREA ESPECIFICA
+      if(controladores_locales.id === data){
+        setControladores(controladores_locales)
+      }
+    }
+    // EVENTO QUE DETECTA LOS CAMBION DEL LOCALSTORAGE (PARA QUE OBTENGAMOS LOS CONTROLADORES EN TIEMPO REAL)
+    const handleStorageChange = (event) => {
+      if (event.key === "controladores") {
+        const controladores_locales  = JSON.parse(event.newValue);
+        setControladores(controladores_locales);
+      }
+    };
+    window.addEventListener("storage", handleStorageChange);
+  // DESMONTAMOS 
+    return () => window.removeEventListener("storage", handleStorageChange);
+    
+  }, []); 
+
+  
+
+
+  useEffect(() => {
+
     if (activo) {
       const { horas, minutos } = JSON.parse(
         localStorage.getItem("tiempoRestanTarea")
@@ -227,8 +265,8 @@ export const ModelHoraDeLaTarea = ({ data }) => {
     }
   }, [activo]);
 
+  
   //------------------------------------------------------------------------//
-
   // FUNCIONES PARA ARREGLAR EN UN FUTURO
   // useEffect(() => {
   //   function calcularElTiempoRestanteCuandoElUsuarioNoEstaEnLaPagina() {
@@ -279,35 +317,44 @@ export const ModelHoraDeLaTarea = ({ data }) => {
 
  
 
-  useEffect(() => {
-    // VEMOS  SI HAY CONTROLADORES LOCALES  DE (ADELANTAR TAREA)
-    const controladoresLocales = JSON.parse(
-      localStorage.getItem("tiemposTareas")
-    );
-    if (controladoresLocales) {
-    }
-  }, []);
+
+  //------------------------------------------------------------------------//
+  //------------------------------------------------------------------------//
+  //------------------------------------------------------------------------//
+
+  function controladores_para_mostrar_los_btns  (from,btns,iniciar,btnPlay,btnStop){
+
+    const controladoresInicio  =  {
+      id:data,
+      from: from,
+      btns: btns,
+      iniciar: iniciar,
+      btnPlay: btnPlay,
+      btnStop: btnStop,
+     }
+
+     localStorage.setItem("controladores",JSON.stringify(controladoresInicio))
+     setControladores(controladoresInicio)
+    
+  }
 
   // EVENTOS CLICK
   function click_btn_Iniciar() {
     setMostrarElegirTiempo(true);
     setIdTareaHecha(data);
-    
-    const controladoresInicio  =  {
-       id:data,
-       from: true,
-       btns: false,
-       iniciar: false,
-       btnPlay: false,
-       btnStop: false,
-      }
-    setControladores(controladoresInicio);
-    
+    controladores_para_mostrar_los_btns(true,false,false,false,false)
+  }
 
-    const  x = JSON.parse(localStorage.getItem("tiemposTareas"))
-    localStorage.setItem("tiemposTareas",JSON.stringify([...x ,controladoresInicio]))
+  function click_btn_play (){
+    controladores_para_mostrar_los_btns(false,true,false,false,true)
+  }
+  function click_btn_stop (){
+    controladores_para_mostrar_los_btns(false,true,false,true,false)
   }
   
+
+
+
 
   return (
     <li className="contenedor-mostrar-hora-de-hacerla">
@@ -317,19 +364,19 @@ export const ModelHoraDeLaTarea = ({ data }) => {
         <FormElegirTiempo
           error={error}
           setTiempo={setTiempo}
-          clickEjecucion={clickEjecucion}
+          click_ejecucion={click_ejecucion}
           tiempo={tiempo}
         />
       )}
-      {controladores.iniciar && (
+      {controladores.iniciar   && (
         <div className="contendor-btn-componente-mostrar-hora-de-la-tarea">
           <BtnIniciar funcion={click_btn_Iniciar} />
         </div>
       )}
       {controladores.btns && (
         <>
-          <BtnControladores txt="play" state={setActivo} param={true} />
-          <BtnControladores txt="stop" state={setActivo} param={false} />
+          <BtnControladores txt="play" clickFuncion={click_btn_play} state={setActivo} param={true} />
+          <BtnControladores txt="stop"  clickFuncion={click_btn_stop} state={setActivo} param={false} />
         </>
       )}
     </li>

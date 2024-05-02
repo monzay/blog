@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 
-export const FormElegirTiempo = ({ setTiempo,tiempo, clickEjecucion, error }) => {
+export const FormElegirTiempo = ({ setTiempo,tiempo, click_ejecucion, error }) => {
 
 
   useEffect(() => {
@@ -14,7 +14,7 @@ export const FormElegirTiempo = ({ setTiempo,tiempo, clickEjecucion, error }) =>
   return (
     <>
       <form
-        onSubmit={(e) => clickEjecucion(e)}
+        onSubmit={(e) => click_ejecucion(e)}
         className="contenedor-input-componente-mostrar-hora-de-hacer"
       >
         <input

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useTransition } from "react";
+import { useState, useEffect, useContext } from "react";
 import "./app styles/app.css";
 import React from "react";
 import { Tarea } from "./web/Tarea";
@@ -16,6 +16,7 @@ import { Nota } from "./web/Nota";
 import { fondoDePantalla } from "./diseños de pago/FondoDePantalla";
 import { contextoEjecutarRetomarTiempo } from "./Contextos/ProviderEjecutarRetomarTiempo";
 import { RUTA_BACKEND } from "../configuracion";
+import { json } from "react-router-dom";
 
 
 export const App = () => {
@@ -66,12 +67,29 @@ export const App = () => {
 
   useEffect(() => {
     if (!localStorage.getItem("tiemposTareas")) {
-      localStorage.setItem("tiemposTareas", JSON.stringify([]));
+      localStorage.setItem("tiemposTareas", JSON.stringify({}));
     }
-
-    
   }, []);
 
+  
+  //---------------------------------------------------------------------------------------------------//
+  //---------------------------------------------------------------------------------------------------//
+
+
+  useEffect(() => {
+    if(!localStorage.getItem("tareaMostrar")){
+      localStorage.setItem("tareaMostrar",JSON.stringify([]))
+    }
+  }, [])
+  
+
+
+  // METE TODOS LOS IDS AL LOCALSTORAGE ACADA 1 MINUTO
+  useEffect(() => {
+    localStorage.setItem("tareaMostrar",JSON.stringify(arrayConTodasLasTareasQueYaPasaronSuTiempo))
+  }, [arrayConTodasLasTareasQueYaPasaronSuTiempo])
+  
+
   //---------------------------------------------------------------------------------------------------//
   //---------------------------------------------------------------------------------------------------//
 
@@ -80,7 +98,7 @@ export const App = () => {
 
 
 
-  // EFECTO  ?
+  // EFECTO  
   useEffect(() => {
     // FUNCION  PARA NO MOSTRAR LA TAREA QUE YA FUE COMPLETADA 
 
@@ -103,14 +121,20 @@ export const App = () => {
 
   // CONCATEMOS EL ARRAY CON LOS IDS CON LOS IDS DE  TAREAADELANTAR PARA MOSTRAR LAS TAREAS QUE SE TIENEN QUE HACER AUN  
 
+
+
   useEffect(() => {
     const array1 = JSON.parse(localStorage.getItem("tiemposTareas"))
-    if(array1.length !== 0){
+    const ids_no_mostrar = JSON.parse(localStorage.getItem("IdTareasHechas"))[0].ids
+    if(Object.keys(array1).length !== 0 && !ids_no_mostrar.includes(array1.id)){
       setTimeout(() => {
-         setArrayConTodasLasTareasQueYaPasaronSuTiempo(prev=> [...prev,array1[0].id])
+         setArrayConTodasLasTareasQueYaPasaronSuTiempo(prev=> [...prev,array1.id])
       }, 1000);
     }
   }, [])
+
+
+
 
 
 
@@ -166,8 +190,6 @@ export const App = () => {
   }, [eliminoUnaTareas,envioElPunto,añadirTarea,actualizoUnaTarea]);
 
 
-  
-
 
   //---------------------------------------------------------------------------------------------------//
   //---------------------------------------------------------------------------------------------------//
@@ -209,6 +231,7 @@ export const App = () => {
                             arrayConTodasLasTareasQueYaPasaronSuTiempo={
                               arrayConTodasLasTareasQueYaPasaronSuTiempo
                             }
+                            
                             todosLosIdsParaNoMostrar={todosLosIdsParaNoMostrar}
                           />
                         );

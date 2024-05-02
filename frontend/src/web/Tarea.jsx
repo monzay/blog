@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, version } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ComponenteActualizarTarea } from "./ComponenteActualizarTarea";
 import { obtenerCredencialesUse } from "../funciones globales/obtenenerDatosDelLocalStorage";
 import { contextoEstadoEliminarTarea } from "../Contextos/EstadoEliminarTarea";
@@ -16,12 +16,14 @@ export const Tarea = ({
   puntosTareas,
   setArrayConTodasLasTareasQueYaPasaronSuTiempo,
   setTiempoFondoDePantalla,
+  arrayConTodasLasTareasQueYaPasaronSuTiempo
 }) => {
   // [tarea]: nos retorna todas las tareas
 
   const { eliminoUnaTareas, setEliminoUnaTarea } = useContext(
     contextoEstadoEliminarTarea
   );
+
 
   const {tareaUser} = useContext(contextoTareas)
   const [tareaId, setTareaId] = useState(0);
@@ -146,6 +148,9 @@ export const Tarea = ({
 
       // FD : CUANDO DIA CAMBIE Y NO SE EL MISMO DIA SE VA A ELIMINAR EL ALAMACENAMIENTO
       eliminarTodosLosIdsAlmacenadosCuandonSeaOtroDia();
+
+
+       
     }, 60000);
 
     return () => clearInterval(interval);
@@ -157,13 +162,24 @@ export const Tarea = ({
     eliminar_id_tarea_adelantada(tareaId)
    }, [tareaId])
 
+
+
+
+
+
+   // RESOLVER PERO POR AHI VA
+
+
+
+
+
+
+
+
   return (
     <div className="tarea" key={tarea.tareaID}>
       {tarea.tareaID === tareaId && mostrarModelActualizar ? (
-        <ComponenteActualizarTarea
-          id={tareaId}
-          setMostrarModelActualizar={setMostrarModelActualizar}
-        />
+        <ComponenteActualizarTarea id={tareaId}  setMostrarModelActualizar={setMostrarModelActualizar} />
       ) : (
         <>
           <div className="tarea-contendor">
@@ -206,7 +222,7 @@ export const Tarea = ({
                 <img className="icon-tarea" src={iconEditar} alt="" />
               </button>
               <button className="tarea-btn" onClick={() => {
-                comenzarTarea(tarea.tareaID,tareaUser,setArrayConTodasLasTareasQueYaPasaronSuTiempo)
+                comenzarTarea(tarea.tareaID,tareaUser,setArrayConTodasLasTareasQueYaPasaronSuTiempo,arrayConTodasLasTareasQueYaPasaronSuTiempo)
               } }>
                 a
               </button>
