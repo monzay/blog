@@ -9,7 +9,8 @@ import { contextoEjecutarRetomarTiempo } from "../Contextos/ProviderEjecutarReto
 import { RUTA_BACKEND } from "../../configuracion";
 import { BtnControladores } from "./seccion mostrar tarea que llegaron a su tiempo/BtnControladores";
 import { BtnIniciar } from "./seccion mostrar tarea que llegaron a su tiempo/BtnIniciar";
-export const ModelHoraDeLaTarea = ({ data }) => {
+import { guardarTiempoCuadoElUsuarioCierreLaPagina } from "./seccion mostrar tarea que llegaron a su tiempo/funciones/guardarTiempoRestanteCundoSalgaElUsuario";
+export const ModelHoraDeLaTarea = ({ data,setControladores,controladores }) => {
   //[data] : retorna el id de la tarea que llego su tiempo para mostrarse
 
   const { tareaUser } = useContext(contextoTareas);
@@ -30,6 +31,18 @@ export const ModelHoraDeLaTarea = ({ data }) => {
   const [tiempo, setTiempo] = useState("");
   const [error, setError] = useState("");
 
+
+
+  // const [controladores, setControladores] = useState({
+  //   id:data,
+  //   from: false,
+  //   btns: false,
+  //   iniciar: true,
+  //   btnPlay: false,
+  //   btnStop: false,
+  // });
+
+
   //------------------------------------------------------------------------//
 
   // EFFECT QUE VE SI LOS EL REPO SE CREO  Y SINO LO CREA
@@ -43,14 +56,7 @@ export const ModelHoraDeLaTarea = ({ data }) => {
     }
   }, []);
   //------------------------------------------------------------------------//
-  // FUNCION  QUE GUARDA EL TIEMPO QUE TRANSCURRIO Y LO GUARDA  AL SALIR DE LA PAGINA O REFRESCAR
-  function guardarTiempoCuadoElUsuarioCierreLaPagina() {
-    window.addEventListener("beforeunload", function (e) {
-      const ultimaHora = tiempoRestante;
-      localStorage.setItem("tiempoRestanTarea", JSON.stringify(ultimaHora));
-    });
-  }
-  guardarTiempoCuadoElUsuarioCierreLaPagina();
+  guardarTiempoCuadoElUsuarioCierreLaPagina(tiempoRestante);
   //------------------------------------------------------------------------//
   // SIRVE LA ENTRELAZAR LOS DATOS
 
@@ -196,14 +202,6 @@ export const ModelHoraDeLaTarea = ({ data }) => {
 
   const [intervalRetarTiempo, setIntervalRestarTiempo] = useState(null);
   const [activo, setActivo] = useState(false);
-    const [controladores, setControladores] = useState({
-    id:data,
-    from: false,
-    btns: false,
-    iniciar: true,
-    btnPlay: false,
-    btnStop: false,
-  });
 
 
 
@@ -279,14 +277,7 @@ export const ModelHoraDeLaTarea = ({ data }) => {
 
  
 
-  useEffect(() => {
-    // VEMOS  SI HAY CONTROLADORES LOCALES  DE (ADELANTAR TAREA)
-    const controladoresLocales = JSON.parse(
-      localStorage.getItem("tiemposTareas")
-    );
-    if (controladoresLocales) {
-    }
-  }, []);
+
 
   // EVENTOS CLICK
   function click_btn_Iniciar() {
@@ -307,6 +298,37 @@ export const ModelHoraDeLaTarea = ({ data }) => {
     const  x = JSON.parse(localStorage.getItem("tiemposTareas"))
     localStorage.setItem("tiemposTareas",JSON.stringify([...x ,controladoresInicio]))
   }
+
+
+  // FUNCIONES QUE YA HICE PERO LAS TENGO QUE VOLVER HACER YA QUE ME BORRARON O ESTAN EL PC 
+  // CREAR UN USEEFFECT QUE DETECTE  LOS  CAMIBION DEL LOCAL STORAGE  Y QUE  LOS META AL ESTADO CONOTROLADORES 
+
+
+
+
+
+
+  function click_play_stop(play,stop){
+     const  controladores =  {
+        id:data,
+        from: false,
+        btns: true,
+        iniciar: false,
+        btnPlay: play,
+        btnStop: stop,
+      }
+    localStorage.setItem("controladores",JSON.stringify(controladores))
+  }
+  
+
+ function click_play (){
+  click_play_stop(true,false)
+ }
+ function click_stop (){
+  click_play_stop(false,true)
+ }
+ 
+ 
   
 
   return (
@@ -328,8 +350,8 @@ export const ModelHoraDeLaTarea = ({ data }) => {
       )}
       {controladores.btns && (
         <>
-          <BtnControladores txt="play" state={setActivo} param={true} />
-          <BtnControladores txt="stop" state={setActivo} param={false} />
+          <BtnControladores txt="play"funcion={click_play} state={setActivo} param={true} />
+          <BtnControladores txt="stop" funcion={click_stop} state={setActivo} param={false} />
         </>
       )}
     </li>

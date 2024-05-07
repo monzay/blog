@@ -27,6 +27,7 @@ export const Login = () => {
   const navegate  = useNavigate()
 
 
+  console.log(RUTA_BACKEND)
 
 
 

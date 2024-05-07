@@ -34,8 +34,50 @@ export const App = () => {
   const [tiempoFondoDePantalla,setTiempoFondoDePantalla] = useState(fondoDePantalla())
 
 
+
+  const [controladores, setControladores] = useState({
+    id:0,
+    from: false,
+    btns: false,
+    iniciar: true,
+    btnPlay: false,
+    btnStop: false,
+  });
+
+
   //---------------------------------------------------------------------------------------------------//
   //---------------------------------------------------------------------------------------------------//
+
+
+  // EVENTO QUE DETECATA LOS CAMBION LOS CONTROLADORES LOCALES Y LOS METE A ESTADO CONTROLADORES 
+
+
+
+
+  // useEffect(() => {
+  //   const controladores_locales =  JSON.parse(localStorage.getItem("controladores"))
+  //    if(Object.keys(controladores_locales).length !== 0){
+  //     setControladores(controladores_locales)
+  //     const handleStorageChange = (event) => {
+  //       if (event.key === 'controladores') {
+  //        setControladores(controladores_locales)
+  //       }
+  //     };
+  //     window.addEventListener("storage",handleStorageChange)
+  //     return ()=>   window.removeEventListener('storage', handleStorageChange);
+  //    }
+  // }, [])
+  
+
+
+  // VEMOS SI LSO CONTROLADORES LOCALS EXISTEN 
+
+  useEffect(() => {
+    const conotroladores_locales =localStorage.getItem("controladores")
+    if(!conotroladores_locales){
+      localStorage.setItem("controladores",JSON.stringify({}))}
+    }, [])
+  
   
   // EFFECT  PARA CREAR UN ESPACION EN EL LOCALSTORAGE (IdTareasHechas)
   useEffect(() => {
@@ -229,6 +271,8 @@ export const App = () => {
                 {idsTareaNoPletadas &&
                   idsTareaNoPletadas.map((data) => (
                     <ModelHoraDeLaTarea
+                    setControladores={setControladores}
+                    controladores={controladores}
                       data={data}
                     />
                   ))}
