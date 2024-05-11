@@ -31,6 +31,7 @@ return rutaDateBase
 }
 
 function eliminarCadaSemanaLosPuntosTareas(db) {
+  
   const date = new Date();
   const dia = date.getDay(); 
   const horas = date.getHours(); 
