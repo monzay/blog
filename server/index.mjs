@@ -14,7 +14,7 @@ import 'dotenv/config'
 
 
 
-const CORS_FRONTEND =  "http://localhost:5173" || process.env.CORS_FRONTEND  
+const CORS_FRONTEND =   process.env.CORS_FRONTEND || "http://localhost:5173" 
 const PORT =  process.env.PORT || 3000 
 
 
@@ -74,12 +74,8 @@ app.post("/app",cargarInformacion)
 app.post("/app/enviar",tareas)
 app.post("/app/eliminar",eliminar)
 app.put("/app/actualizar",actualizar)
-
 //seguimiento para todas las tareas del usuario si fue hecha o no 
-
 app.post("/app/seguimiento",seguimientoTarea)
-
-
 
 app.listen(PORT, () => {
   console.log("se devanto el servidor")
