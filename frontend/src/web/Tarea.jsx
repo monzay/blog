@@ -148,9 +148,6 @@ export const Tarea = ({
 
       // FD : CUANDO DIA CAMBIE Y NO SE EL MISMO DIA SE VA A ELIMINAR EL ALAMACENAMIENTO
       eliminarTodosLosIdsAlmacenadosCuandonSeaOtroDia();
-
-
-       
     }, 60000);
 
     return () => clearInterval(interval);
