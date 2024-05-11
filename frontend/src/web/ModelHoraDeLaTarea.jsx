@@ -103,10 +103,11 @@ export const ModelHoraDeLaTarea = ({ data }) => {
           mandarIdParaNoMastrarLasTareasCompletadas();
         }
       }
-    }, 1000);
+    }, 60000);
 
     setIntervalRestarTiempo(interval);
   }
+
 
   //------------------------------------------------------------------------//
   //------------------------------------------------------------------------//
